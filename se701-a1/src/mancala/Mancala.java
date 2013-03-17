@@ -1,8 +1,5 @@
 package mancala;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import utility.MockIO;
 
 /**
