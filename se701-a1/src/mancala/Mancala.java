@@ -12,8 +12,10 @@ public class Mancala {
 	
 	public void play(MockIO io) {
 		
-		MancalaModel model = MancalaModel.getInstance();
-		MancalaView view = new MancalaView(model, io);	
+		MancalaModel model = new MancalaModel();
+		MancalaView view = new MancalaView(model, io);
+		model.addObserver(view);
+		
 		boolean isGameOver = false;		
 		
 		view.printBoard();
@@ -26,20 +28,15 @@ public class Mancala {
 				continue;
 			}
 			
-			isGameOver = model.currentPlayerMove(response);			
+			isGameOver = model.currentPlayerMove(response); //notifies observers
 			
 			if(!isGameOver){
-				view.printBoard();
 				response = view.promptPlayer();
 			}
 		}
 		
-		if(isGameOver) {
-			view.gameEnded();
-		} else {
+		if(!isGameOver) {
 			view.gameQuit();
 		}
-		
-		model.reset();
 	}
 }

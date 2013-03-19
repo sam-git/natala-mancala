@@ -3,13 +3,15 @@
  */
 package mancala;
 
+import java.util.Observable;
+import java.util.Observer;
 import utility.IO;
 
 /**
  * @author Sam
  * 
  */
-public class MancalaView {
+public class MancalaView implements Observer {
 
 	private MancalaModel model;
 	private IO io;
@@ -97,5 +99,17 @@ public class MancalaView {
 
 	public void gameQuit() {
 		printGameOverBoard();		
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if (arg1 instanceof Boolean) {
+			boolean isGameOver = (Boolean) arg1;			
+			if (isGameOver) {
+				gameEnded();
+			} else {
+				printBoard();
+			}
+		}
 	}
 }

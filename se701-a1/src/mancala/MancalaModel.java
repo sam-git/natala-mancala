@@ -3,35 +3,23 @@
  */
 package mancala;
 
+import java.util.Observable;
+
 /**
  * @author Sam
  *
  */
 
 
-class MancalaModel {
-	private int[] houses = {0,4,4,4,4,4,4,0,4,4,4,4,4,4};
-	private int current_player = 1;
+class MancalaModel extends Observable{
+	private int[] houses;
+	private int current_player;
+
 	
-    // Private constructor prevents instantiation from other classes
-    private MancalaModel() { }
-
-    /**
-    * SingletonHolder is loaded on the first execution of Singleton.getInstance() 
-    * or the first access to SingletonHolder.INSTANCE, not before.
-    */
-    private static class SingletonHolder { 
-            public static final MancalaModel INSTANCE = new MancalaModel();
-    }
-
-    public static MancalaModel getInstance() {
-            return SingletonHolder.INSTANCE;
-    }
-    
-    public void reset() {
+    public MancalaModel() {
     	houses = new int[] {0,4,4,4,4,4,4,0,4,4,4,4,4,4};
     	current_player = 1;
-    }
+    }    
     
     public int getCurrentPlayer(){
     	return current_player;
@@ -178,7 +166,12 @@ class MancalaModel {
 			this.current_player = ((this.current_player) % 2) + 1;
 		}
 		
-		return isGameOver();
+		Boolean isGameOver = isGameOver();
+		
+		setChanged();
+		notifyObservers(isGameOver);
+		
+		return isGameOver;
     }
     
     
