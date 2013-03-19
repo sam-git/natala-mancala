@@ -210,5 +210,4 @@ final class MancalaModel extends Observable {
 		}
 		return answer;
 	}
-
 }

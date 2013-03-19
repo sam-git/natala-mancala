@@ -1,5 +1,6 @@
 package mancala;
 
+import utility.IO;
 import utility.MockIO;
 
 /**
@@ -10,15 +11,19 @@ public class Mancala {
 		new Mancala().play(new MockIO());
 	}
 	
-	public void play(MockIO io) {
+	public void play(IO io) {
 		
 		MancalaModel model = new MancalaModel();
 		MancalaView view = new MancalaASCIIView(model, io);
 		model.addObserver(view);
 		
-		view.updateBoard();
-		int house;		
-		while (!model.isGameOver() && (house = view.promptPlayer()) != MancalaView.cancelResult) {
+		view.updateBoard();	
+		int house;
+		while (!model.isGameOver())  {
+			if ((house = view.promptPlayer()) == MancalaView.cancelResult) {
+				view.gameQuit();
+				break;
+			}
 
 			if (model.isHouseEmpty(house)) {
 				view.emptyHousePrompt();
@@ -26,11 +31,6 @@ public class Mancala {
 			}
 			
 			model.move(house); //change game state. notifies observers
-		}
-		
-		//game was quit by user is isGameOver is false.
-		if(!model.isGameOver()) {
-			view.gameQuit();
 		}
 	}
 }

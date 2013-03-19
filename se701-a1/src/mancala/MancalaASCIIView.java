@@ -16,8 +16,6 @@ public class MancalaASCIIView extends MancalaView {
 	private MancalaModel model;
 	private IO io;
 
-	// public static final int cancelResult = -1;
-
 	public MancalaASCIIView(MancalaModel model, IO io) {
 		this.model = model;
 		this.io = io;
