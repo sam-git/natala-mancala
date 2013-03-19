@@ -5,5 +5,5 @@ package mancala;
  *
  */
 enum State {
-    EMPTYHOUSE, GAMEOVER, UPDATEDBOARD
+    GAMEOVER, UPDATEDBOARD
 }

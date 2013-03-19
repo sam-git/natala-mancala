@@ -52,13 +52,22 @@ public class MancalaASCIIView extends MancalaView {
 	public int promptPlayer() {
 		String prompt = "Player " + model.getCurrentPlayer()
 				+ "'s turn - Specify house number or 'q' to quit: ";
-		return io.readInteger(prompt, 0, 6, cancelResult, "q");
+		return io.readInteger(prompt, 1, 6, cancelResult, "q");
 	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		ModelObservedData data = (ModelObservedData) arg1;
-		data.accept(this);
+		State state = (State) arg1;
+		switch (state) {
+		case UPDATEDBOARD:
+			updateBoard();
+			break;
+		case GAMEOVER:
+			gameEnded();
+			break;
+		default:
+			break;
+		}
 	}
 
 	// //////////////////////////////////////////////////////////////////////

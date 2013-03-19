@@ -121,15 +121,13 @@ final class MancalaModel extends Observable {
 			this.current_player = ((this.current_player) % 2) + 1;
 		}
 
-		ModelObservedData mod;
+		State state = State.UPDATEDBOARD;
 		if (this.isGameOver = hasGameEnded()) {
-			mod = new ModelObservedData(State.GAMEOVER);
-		} else {
-			mod = new ModelObservedData(State.UPDATEDBOARD);
+			state = State.GAMEOVER;
 		}
 
 		setChanged();
-		notifyObservers(mod);
+		notifyObservers(state);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////

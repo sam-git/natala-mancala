@@ -25,10 +25,10 @@ public class Mancala {
 				continue;
 			}
 			
-			model.move(house); //notifies observers
+			model.move(house); //change game state. notifies observers
 		}
 		
-		//game was quit is isGameOver is false.
+		//game was quit by user is isGameOver is false.
 		if(!model.isGameOver()) {
 			view.gameQuit();
 		}
