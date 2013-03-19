@@ -13,65 +13,56 @@ import utility.IO;
  */
 public class MancalaASCIIView extends MancalaView {
 
-	private MancalaModel model;
 	private IO io;
 
-	public MancalaASCIIView(MancalaModel model, IO io) {
-		this.model = model;
+	public MancalaASCIIView(MancalaModel model, IO io) {		
+		super(model);
 		this.io = io;
+		printBoard();
 	}
 
 	@Override
 	public void gameQuit() {
 		printGameOverBoard();
 	}
-
-	@Override
-	public void gameEnded() {
-		printGameOverBoard();
-		printScores();
-	}
-
-	@Override
-	public void updateBoard() {
-		printBoard();
-	}
-
+	
 	@Override
 	public void emptyHousePrompt() {
 		io.println("House is empty. Move again.");
 		printBoard();
 	}
 
-	/*
-	 * prompt the user to make a move, and returns an integer from 0 to 6 if the
-	 * user made a valid move, or -1 for an invalid move
+	/**
+	 * prompt the user to make a move, and returns an integer from 1 to 6 if the
+	 * user made a valid move, prompts the user again if the move was invalid, 
+	 * or returns MancalaView.cancelResult if the user pressed the quit key..
 	 */
+	@Override
 	public int promptPlayer() {
 		String prompt = "Player " + model.getCurrentPlayer()
 				+ "'s turn - Specify house number or 'q' to quit: ";
-		return io.readInteger(prompt, 1, 6, cancelResult, "q");
+		return io.readInteger(prompt, 1, 6, MancalaView.cancelResult, "q");
 	}
 
 	@Override
+	/**
+	 * Called by model when the game state changes.
+	 */
 	public void update(Observable arg0, Object arg1) {
-		State state = (State) arg1;
-		switch (state) {
-		case UPDATEDBOARD:
-			updateBoard();
-			break;
-		case GAMEOVER:
-			gameEnded();
-			break;
-		default:
-			break;
+		if (model.isGameOver()) {
+			printGameOverBoard();
+			printScores();
+		} else {
+			printBoard();
 		}
 	}
 
-	// //////////////////////////////////////////////////////////////////////
+	//*****************************************************
+	// Private Functions
+	//
 
-	/*
-	 * Print an ASCII representation of the current board to io
+	/**
+	 * Print an ASCII representation of the current board to io.
 	 */
 	private void printBoard() {
 
@@ -95,7 +86,7 @@ public class MancalaASCIIView extends MancalaView {
 
 	}
 
-	/*
+	/**
 	 * Print the final board of the game once it is over. Included the text
 	 * "Game Over" before the board.
 	 */
@@ -104,8 +95,8 @@ public class MancalaASCIIView extends MancalaView {
 		printBoard();
 	}
 
-	/*
-	 * print the score and the winner at the end of a completed game
+	/**
+	 * Print the score and the winner at the end of a completed game
 	 */
 	private void printScores() {
 		int player1 = model.getScore(1);

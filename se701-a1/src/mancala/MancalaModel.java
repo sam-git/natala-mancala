@@ -88,6 +88,7 @@ final class MancalaModel extends Observable {
 		int seeds = houses[startingHouseIndex];
 		houses[startingHouseIndex] = 0;
 
+		//move seeds
 		int currentHouseIndex = (startingHouseIndex) % 14;
 		for (int i = 0; i < seeds; i++) {
 			currentHouseIndex = (currentHouseIndex + 1) % 14;
@@ -120,17 +121,15 @@ final class MancalaModel extends Observable {
 		if (!houseIsPlayersStore(currentHouseIndex)) {
 			this.current_player = ((this.current_player) % 2) + 1;
 		}
-
-		State state = State.UPDATEDBOARD;
-		if (this.isGameOver = hasGameEnded()) {
-			state = State.GAMEOVER;
-		}
-
+		
+		this.isGameOver = hasGameEnded();
 		setChanged();
-		notifyObservers(state);
+		notifyObservers();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
+	//*****************************************************
+	// Private Functions
+	//
 
 	/**
 	 * Return the index of houses[] that corresponds to the users specified

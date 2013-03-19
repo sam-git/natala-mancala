@@ -14,10 +14,9 @@ public class Mancala {
 	public void play(IO io) {
 		
 		MancalaModel model = new MancalaModel();
-		MancalaView view = new MancalaASCIIView(model, io);
+		MancalaView view = new MancalaASCIIView(model, io); //prints initial ASCII board
 		model.addObserver(view);
-		
-		view.updateBoard();	
+			
 		int house;
 		while (!model.isGameOver())  {
 			if ((house = view.promptPlayer()) == MancalaView.cancelResult) {
