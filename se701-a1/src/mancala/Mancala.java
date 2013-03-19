@@ -13,30 +13,23 @@ public class Mancala {
 	public void play(MockIO io) {
 		
 		MancalaModel model = new MancalaModel();
-		MancalaView view = new MancalaView(model, io);
+		MancalaView view = new MancalaASCIIView(model, io);
 		model.addObserver(view);
 		
-		boolean isGameOver = false;		
-		
-		view.printBoard();
-		int response = view.promptPlayer();
-		
-		while (response != MancalaView.cancelResult && !isGameOver) {
-			
-			if (model.getCount(model.getCurrentPlayer(), response) == 0) {
-				response = view.moveAgain();
+		view.updateBoard();
+		int house;		
+		while (!model.isGameOver() && (house = view.promptPlayer()) != MancalaView.cancelResult) {
+
+			if (model.isHouseEmpty(house)) {
+				view.emptyHousePrompt();
 				continue;
 			}
 			
-			isGameOver = model.currentPlayerMove(response); //notifies observers
-			
-			if(!isGameOver){
-				response = view.promptPlayer();
-			}
+			model.move(house); //notifies observers
 		}
 		
 		//game was quit is isGameOver is false.
-		if(!isGameOver) {
+		if(!model.isGameOver()) {
 			view.gameQuit();
 		}
 	}
