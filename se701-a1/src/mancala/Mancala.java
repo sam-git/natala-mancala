@@ -35,6 +35,7 @@ public class Mancala {
 			}
 		}
 		
+		//game was quit is isGameOver is false.
 		if(!isGameOver) {
 			view.gameQuit();
 		}

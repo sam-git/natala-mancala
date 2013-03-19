@@ -92,7 +92,7 @@ public class MancalaView implements Observer {
 		}
 	}
 	
-	public void gameEnded() {
+	private void gameEnded() {
 		printGameOverBoard();
 		printScores();
 	}
