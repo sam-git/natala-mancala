@@ -8,7 +8,7 @@ import utility.IO;
  * @author Sam
  * 
  */
-public class MancalaASCIIView extends MancalaView implements MancalaInput{
+public class MancalaASCIIView extends AbstractView implements IMancalaInput{
 
 	private IO io;
 	private MancalaModel model;
@@ -39,7 +39,7 @@ public class MancalaASCIIView extends MancalaView implements MancalaInput{
 	public int promptPlayer() {
 		String prompt = "Player " + model.getCurrentPlayer()
 				+ "'s turn - Specify house number or 'q' to quit: ";
-		return io.readInteger(prompt, 1, 6, MancalaInput.cancelResult, "q");
+		return io.readInteger(prompt, 1, 6, IMancalaInput.cancelResult, "q");
 	}
 	
 //*****************************************************
@@ -74,18 +74,18 @@ public class MancalaASCIIView extends MancalaView implements MancalaInput{
 		io.println("+----+-------+-------+-------+-------+-------+-------+----+");
 		String line2 = String
 				.format("| P2 | 6[%2d] | 5[%2d] | 4[%2d] | 3[%2d] | 2[%2d] | 1[%2d] | %2d |",
-						model.getHouseCount(2, 6), model.getHouseCount(2, 5),
-						model.getHouseCount(2, 4), model.getHouseCount(2, 3),
-						model.getHouseCount(2, 2), model.getHouseCount(2, 1),
-						model.getHouseCount(1, 0));
+						model.getSeedCount(2, 6), model.getSeedCount(2, 5),
+						model.getSeedCount(2, 4), model.getSeedCount(2, 3),
+						model.getSeedCount(2, 2), model.getSeedCount(2, 1),
+						model.getSeedCount(1, 0));
 		io.println(line2);
 		io.println("|    |-------+-------+-------+-------+-------+-------|    |");
 		String line4 = String
 				.format("| %2d | 1[%2d] | 2[%2d] | 3[%2d] | 4[%2d] | 5[%2d] | 6[%2d] | P1 |",
-						model.getHouseCount(2, 0), model.getHouseCount(1, 1),
-						model.getHouseCount(1, 2), model.getHouseCount(1, 3),
-						model.getHouseCount(1, 4), model.getHouseCount(1, 5),
-						model.getHouseCount(1, 6));
+						model.getSeedCount(2, 0), model.getSeedCount(1, 1),
+						model.getSeedCount(1, 2), model.getSeedCount(1, 3),
+						model.getSeedCount(1, 4), model.getSeedCount(1, 5),
+						model.getSeedCount(1, 6));
 		io.println(line4);
 		io.println("+----+-------+-------+-------+-------+-------+-------+----+");
 

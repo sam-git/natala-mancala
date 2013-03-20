@@ -1,11 +1,11 @@
 package viewStrategies;
 
-import mancala.MancalaView;
+import mancala.AbstractView;
 
-public class GameEndedStrategy implements ViewStrategy{
+public class GameEndedStrategy implements IViewStrategy{
 
 	@Override
-	public void accept(MancalaView view) {
+	public void execute(AbstractView view) {
 		view.gameEnded();		
 	}
 

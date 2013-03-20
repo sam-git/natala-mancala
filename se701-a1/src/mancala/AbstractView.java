@@ -3,7 +3,7 @@ package mancala;
 import java.util.Observable;
 import java.util.Observer;
 
-import viewStrategies.ViewStrategy;
+import viewStrategies.IViewStrategy;
 
 
 /**
@@ -22,14 +22,14 @@ import viewStrategies.ViewStrategy;
  * @author Sam
  *
  */
-public abstract class MancalaView implements Observer {
+public abstract class AbstractView implements Observer {
 	
 	@Override
 	/**
 	 * Called by model when the game state changes.
 	 */
 	public void update(Observable arg0, Object strategy) {
-		((ViewStrategy)strategy).accept(this);
+		((IViewStrategy)strategy).execute(this);
 	}
 	
 //*****************************************************

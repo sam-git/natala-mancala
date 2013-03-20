@@ -10,7 +10,7 @@ import viewStrategies.MoveEndedStrategy;
  * The model for the Mancala game. Encapsulates all the game state and game logic.
  * Is Observable and notifies all observers of change in state by passing them Strategy objects.
  */
-final class MancalaModel extends Observable {
+final class MancalaModel extends Observable implements IMancalaModel {
 	private int[] houses;
 	private int current_player;
 	private boolean isGameOver;
@@ -44,7 +44,7 @@ final class MancalaModel extends Observable {
 	 * @return
 	 */
 	public boolean isHouseEmpty(int house) {
-		return (getHouseCount(current_player, house) == 0);
+		return (getSeedCount(current_player, house) == 0);
 	}
 
 	/**
@@ -54,7 +54,7 @@ final class MancalaModel extends Observable {
 	 * @param house
 	 * @return
 	 */
-	public int getHouseCount(int player, int house) {
+	public int getSeedCount(int player, int house) {
 
 		if (house == 0 && player == 1) {
 			return houses[7];
@@ -107,12 +107,12 @@ final class MancalaModel extends Observable {
 		for (int i = 0; i < seeds; i++) {
 			currentHouseIndex = (currentHouseIndex + 1) % 14;
 
-			// skip if players land opponents base
+			// skip if player lands on opponents base
 			if (this.current_player == 1 && currentHouseIndex == 0) {
 				i -= 1;
 			} else if (this.current_player == 2 && currentHouseIndex == 7) {
 				i -= 1;
-			} else { // otherwise incremetn
+			} else { // otherwise increment house
 				houses[currentHouseIndex]++;
 			}
 		}
@@ -131,11 +131,12 @@ final class MancalaModel extends Observable {
 			houses[oppositeHouse] = 0;
 		}
 
-		// check for land on store and switch player
+		// check for land on own store and if not switch player
 		if (!houseIsPlayersStore(currentHouseIndex)) {
 			this.current_player = ((this.current_player) % 2) + 1;
 		}
 		
+		//notify observers of end of move or end of game
 		setChanged();
 		if (this.isGameOver = hasGameEnded()) {
 			notifyObservers(new GameEndedStrategy());
@@ -144,6 +145,9 @@ final class MancalaModel extends Observable {
 		}
 	}
 	
+	/**
+	 * notify observers that the game was quit before ending
+	 */
 	public void quit() {
 		this.isGameOver = true;
 		setChanged();

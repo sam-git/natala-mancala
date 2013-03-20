@@ -5,6 +5,7 @@ import utility.MockIO;
 
 /**
  * This class is the starting point for SOFTENG 701 Assignment 1.1 in 2013.
+ * Acts as the controller in a MVC architecture.
  */
 public class Mancala {
 	public static void main(String[] args) {
@@ -14,12 +15,12 @@ public class Mancala {
 	public void play(IO io) {
 		
 		MancalaModel model = new MancalaModel();
-		MancalaView asciiView = new MancalaASCIIView(model, io); //prints board
-		MancalaInput input = (MancalaInput)asciiView; //use ASCIIView as input source
+		AbstractView asciiView = new MancalaASCIIView(model, io); //prints board
+		IMancalaInput input = (IMancalaInput)asciiView; //use ASCIIView as input source
 			
 		int house;
 		while (!model.isGameOver())  {
-			if ((house = input.promptPlayer()) == MancalaInput.cancelResult) {
+			if ((house = input.promptPlayer()) == IMancalaInput.cancelResult) {
 				model.quit(); //notifies all observers game was quit
 				break;
 			}
