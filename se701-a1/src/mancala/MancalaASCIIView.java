@@ -1,11 +1,10 @@
-/**
- * 
- */
 package mancala;
 
 import utility.IO;
 
 /**
+ * Concrete class acting as a View and as Input for the Mancala game.
+ * 
  * @author Sam
  * 
  */
@@ -20,11 +19,10 @@ public class MancalaASCIIView extends MancalaView implements MancalaInput{
 		model.addObserver(this); //adds view as observer to model;
 		printBoard(); //ASCII views print board first
 	}
-
-	@Override
-	public void gameQuit() {
-		printGameOverBoard();
-	}
+	
+//*****************************************************
+// MancalaInput Functions
+//
 	
 	@Override
 	public void emptyHousePrompt() {
@@ -44,6 +42,15 @@ public class MancalaASCIIView extends MancalaView implements MancalaInput{
 		return io.readInteger(prompt, 1, 6, MancalaInput.cancelResult, "q");
 	}
 	
+//*****************************************************
+// MancalaView Overridden Functions
+//
+	
+	@Override
+	public void gameQuit() {
+		printGameOverBoard();
+	}
+	
 	@Override
 	public void gameEnded() {
 		printGameOverBoard();
@@ -55,9 +62,9 @@ public class MancalaASCIIView extends MancalaView implements MancalaInput{
 		printBoard();
 	}
 
-	//*****************************************************
-	// Private Functions
-	//
+//*****************************************************
+// Private Functions
+//
 
 	/**
 	 * Print an ASCII representation of the current board to io.

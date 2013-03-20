@@ -1,5 +1,8 @@
 package mancala;
 
+/**
+ * Interface that  must be implemented by any class acting as the input to the Mancala game.
+ */
 public interface MancalaInput {
 	/**
 	 * int returned by promptPlayer() when the player chooses the quit option.

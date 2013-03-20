@@ -32,6 +32,10 @@ public abstract class MancalaView implements Observer {
 		((ViewStrategy)strategy).accept(this);
 	}
 	
+//*****************************************************
+// The following methods can be overridden by subclasses if they wish to act upon
+//	the events when notified of them by the Model.
+	
 	public void gameEnded() {}
 
 	public void moveEnded() {}

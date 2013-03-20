@@ -1,6 +1,3 @@
-/**
- * 
- */
 package mancala;
 
 import java.util.Observable;
@@ -9,6 +6,10 @@ import viewStrategies.GameEndedStrategy;
 import viewStrategies.GameQuitStrategy;
 import viewStrategies.MoveEndedStrategy;
 
+/**
+ * The model for the Mancala game. Encapsulates all the game state and game logic.
+ * Is Observable and notifies all observers of change in state by passing them Strategy objects.
+ */
 final class MancalaModel extends Observable {
 	private int[] houses;
 	private int current_player;

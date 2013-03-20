@@ -29,7 +29,7 @@ public class Mancala {
 				continue;
 			}
 			
-			model.move(house); //change game state. notifies all observers
+			model.move(house); //changes game state. notifies all observers
 		}
 	}
 }
