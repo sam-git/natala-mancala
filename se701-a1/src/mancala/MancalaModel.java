@@ -25,6 +25,7 @@ final class MancalaModel extends Observable implements IMancalaModel {
 	 * returns whether or not the game is over
 	 * @return
 	 */
+	@Override
 	public boolean isGameOver() {
 		return this.isGameOver;
 	}
@@ -34,6 +35,7 @@ final class MancalaModel extends Observable implements IMancalaModel {
 	 * 
 	 * @return
 	 */
+	@Override
 	public int getCurrentPlayer() {
 		return current_player;
 	}
@@ -43,6 +45,7 @@ final class MancalaModel extends Observable implements IMancalaModel {
 	 * @param house
 	 * @return
 	 */
+	@Override
 	public boolean isHouseEmpty(int house) {
 		return (getSeedCount(current_player, house) == 0);
 	}
@@ -54,6 +57,7 @@ final class MancalaModel extends Observable implements IMancalaModel {
 	 * @param house
 	 * @return
 	 */
+	@Override
 	public int getSeedCount(int player, int house) {
 
 		if (house == 0 && player == 1) {
@@ -72,6 +76,7 @@ final class MancalaModel extends Observable implements IMancalaModel {
 	/**
 	 * returns the score of a player at the end of a game.
 	 */
+	@Override
 	public int getScore(int player) {
 		int sum;
 		if (player == 1) {
@@ -89,6 +94,7 @@ final class MancalaModel extends Observable implements IMancalaModel {
 	 * @param house
 	 * @return
 	 */
+	@Override
 	public void move(int house) {
 
 		// if game has ended do nothing
@@ -148,6 +154,7 @@ final class MancalaModel extends Observable implements IMancalaModel {
 	/**
 	 * notify observers that the game was quit before ending
 	 */
+	@Override
 	public void quit() {
 		this.isGameOver = true;
 		setChanged();
