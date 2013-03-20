@@ -5,6 +5,7 @@ package mancala;
 
 import java.util.Observable;
 
+import strategies.Strategy;
 import utility.IO;
 
 /**
@@ -43,18 +44,25 @@ public class MancalaASCIIView extends MancalaView {
 				+ "'s turn - Specify house number or 'q' to quit: ";
 		return io.readInteger(prompt, 1, 6, MancalaView.cancelResult, "q");
 	}
+	
+	@Override
+	public void gameEnded() {
+		printGameOverBoard();
+		printScores();
+	}
+
+	@Override
+	public void updateBoard() {
+		printBoard();
+	}
 
 	@Override
 	/**
 	 * Called by model when the game state changes.
 	 */
 	public void update(Observable arg0, Object arg1) {
-		if (model.isGameOver()) {
-			printGameOverBoard();
-			printScores();
-		} else {
-			printBoard();
-		}
+		Strategy strategy = (Strategy)arg1;
+		strategy.accept(this);
 	}
 
 	//*****************************************************

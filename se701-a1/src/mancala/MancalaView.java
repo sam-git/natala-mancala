@@ -49,5 +49,8 @@ public abstract class MancalaView implements Observer {
 	 * called by the controller if a player quits.
 	 */
 	abstract void gameQuit();
+	
+	public abstract void gameEnded();
 
+	public abstract void updateBoard();
 }
