@@ -16,7 +16,6 @@ public class MancalaASCIIView extends AbstractView implements IMancalaInput{
 	public MancalaASCIIView(MancalaModel model, IO io) {
 		this.io = io;
 		this.model = model;
-		model.addObserver(this); //adds view as observer to model;
 		printBoard(); //ASCII views print board first
 	}
 	

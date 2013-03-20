@@ -16,7 +16,8 @@ public class Mancala {
 		
 		MancalaModel model = new MancalaModel();
 		AbstractView asciiView = new MancalaASCIIView(model, io); //ASCIIView prints board on construction
-		IMancalaInput input = (IMancalaInput)asciiView; //use ASCIIView as input source
+		model.addObserver(asciiView); //adds view as observer to model;
+		IMancalaInput input = (IMancalaInput) asciiView; //use ASCIIView as input source
 			
 		int house;
 		while (!model.isGameOver())  {
