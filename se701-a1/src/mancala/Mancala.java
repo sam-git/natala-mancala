@@ -14,17 +14,18 @@ public class Mancala {
 	public void play(IO io) {
 		
 		MancalaModel model = new MancalaModel();
-		MancalaView view = new MancalaASCIIView(model, io); //prints board, adds view as observer to model
+		MancalaView asciiView = new MancalaASCIIView(model, io); //prints board, adds view as observer to model
+		MancalaInput input = (MancalaInput)asciiView; //input source
 			
 		int house;
 		while (!model.isGameOver())  {
-			if ((house = view.promptPlayer()) == MancalaView.cancelResult) {
-				view.gameQuit();
+			if ((house = input.promptPlayer()) == MancalaInput.cancelResult) {
+				input.gameQuit();
 				break;
 			}
 
 			if (model.isHouseEmpty(house)) {
-				view.emptyHousePrompt();
+				input.emptyHousePrompt();
 				continue;
 			}
 			

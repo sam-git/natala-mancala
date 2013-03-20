@@ -6,7 +6,7 @@ public class MoveOverStrategy implements Strategy{
 
 	@Override
 	public void accept(MancalaView view) {
-		view.updateBoard();		
+		view.moveEnded();		
 	}
 
 }

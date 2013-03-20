@@ -3,16 +3,13 @@
  */
 package mancala;
 
-import java.util.Observable;
-
-import strategies.Strategy;
 import utility.IO;
 
 /**
  * @author Sam
  * 
  */
-public class MancalaASCIIView extends MancalaView {
+public class MancalaASCIIView extends MancalaView implements MancalaInput{
 
 	private IO io;
 
@@ -42,7 +39,7 @@ public class MancalaASCIIView extends MancalaView {
 	public int promptPlayer() {
 		String prompt = "Player " + model.getCurrentPlayer()
 				+ "'s turn - Specify house number or 'q' to quit: ";
-		return io.readInteger(prompt, 1, 6, MancalaView.cancelResult, "q");
+		return io.readInteger(prompt, 1, 6, MancalaInput.cancelResult, "q");
 	}
 	
 	@Override
@@ -52,17 +49,8 @@ public class MancalaASCIIView extends MancalaView {
 	}
 
 	@Override
-	public void updateBoard() {
+	public void moveEnded() {
 		printBoard();
-	}
-
-	@Override
-	/**
-	 * Called by model when the game state changes.
-	 */
-	public void update(Observable arg0, Object arg1) {
-		Strategy strategy = (Strategy)arg1;
-		strategy.accept(this);
 	}
 
 	//*****************************************************

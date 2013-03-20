@@ -1,6 +1,9 @@
 package mancala;
 
+import java.util.Observable;
 import java.util.Observer;
+
+import strategies.Strategy;
 
 /**
  * MancalaView defines a minimum set of methods that are needed by the Mancala controller
@@ -15,12 +18,6 @@ import java.util.Observer;
 public abstract class MancalaView implements Observer {
 	
 	/**
-	 * int returned by promptPlayer() when the player chooses the quit option.
-	 * Should be used by the controller to determine if the player quit instead of made a move.
-	 */
-	public static final int cancelResult = -1;
-	
-	/**
 	 * Used by child classes to access the model. 
 	 */
 	protected MancalaModel model;
@@ -33,24 +30,17 @@ public abstract class MancalaView implements Observer {
 		this.model = model;
 		model.addObserver(this);
 	}
-
-	/**
-	 * called by the controller to prompt the player for input.
-	 * @return
-	 */
-	abstract int promptPlayer();
 	
+	@Override
 	/**
-	 * called by the controller if a player specified an empty house. 
+	 * Called by model when the game state changes.
 	 */
-	abstract void emptyHousePrompt();
-	
-	/**
-	 * called by the controller if a player quits.
-	 */
-	abstract void gameQuit();
+	public void update(Observable arg0, Object arg1) {
+		Strategy strategy = (Strategy)arg1;
+		strategy.accept(this);
+	}
 	
 	public abstract void gameEnded();
 
-	public abstract void updateBoard();
+	public abstract void moveEnded();
 }
