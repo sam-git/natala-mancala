@@ -15,7 +15,7 @@ public class Mancala {
 	public void play(IO io) {
 		
 		MancalaModel model = new MancalaModel();
-		AbstractView asciiView = new MancalaASCIIView(model, io); //prints board
+		AbstractView asciiView = new MancalaASCIIView(model, io); //ASCIIView prints board on construction
 		IMancalaInput input = (IMancalaInput)asciiView; //use ASCIIView as input source
 			
 		int house;
