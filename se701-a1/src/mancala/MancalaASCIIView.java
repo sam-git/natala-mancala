@@ -18,7 +18,7 @@ public class MancalaASCIIView extends MancalaView implements MancalaInput{
 		this.io = io;
 		this.model = model;
 		model.addObserver(this); //adds view as observer to model;
-		printBoard();
+		printBoard(); //ASCII views print board first
 	}
 
 	@Override

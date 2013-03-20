@@ -20,6 +20,10 @@ final class MancalaModel extends Observable {
 		this.isGameOver = false;
 	}
 
+	/**
+	 * returns whether or not the game is over
+	 * @return
+	 */
 	public boolean isGameOver() {
 		return this.isGameOver;
 	}
@@ -33,12 +37,17 @@ final class MancalaModel extends Observable {
 		return current_player;
 	}
 
+	/**
+	 * return true if one or more seeds are in the current players selected house.
+	 * @param house
+	 * @return
+	 */
 	public boolean isHouseEmpty(int house) {
 		return (getHouseCount(current_player, house) == 0);
 	}
 
 	/**
-	 * returns the number value of a players house.
+	 * returns the number of seeds in a players house.
 	 * 
 	 * @param player
 	 * @param house
@@ -60,7 +69,7 @@ final class MancalaModel extends Observable {
 	}
 
 	/**
-	 * returns the score of a player at the end of a game
+	 * returns the score of a player at the end of a game.
 	 */
 	public int getScore(int player) {
 		int sum;
@@ -74,7 +83,7 @@ final class MancalaModel extends Observable {
 
 	/**
 	 * Makes a move for the current player. Updates houses and sets the current
-	 * player at the end of the move
+	 * player at the end of the move. Notifies Observers with a ViewStrategy.
 	 * 
 	 * @param house
 	 * @return
@@ -140,9 +149,9 @@ final class MancalaModel extends Observable {
 		notifyObservers(new GameQuitStrategy());
 	}
 
-	//*****************************************************
-	// Private Functions
-	//
+//*****************************************************
+// Private Functions
+//
 
 	/**
 	 * Return the index of houses[] that corresponds to the users specified

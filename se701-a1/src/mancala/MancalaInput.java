@@ -17,9 +17,4 @@ public interface MancalaInput {
 	 * called by the controller if a player specified an empty house. 
 	 */
 	void emptyHousePrompt();
-	
-	/**
-	 * called by the controller if a player quits.
-	 */
-	void gameQuit();
 }

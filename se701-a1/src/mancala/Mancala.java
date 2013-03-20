@@ -15,12 +15,12 @@ public class Mancala {
 		
 		MancalaModel model = new MancalaModel();
 		MancalaView asciiView = new MancalaASCIIView(model, io); //prints board
-		MancalaInput input = (MancalaInput)asciiView; //input source
+		MancalaInput input = (MancalaInput)asciiView; //use ASCIIView as input source
 			
 		int house;
 		while (!model.isGameOver())  {
 			if ((house = input.promptPlayer()) == MancalaInput.cancelResult) {
-				model.quit();
+				model.quit(); //notifies all observers game was quit
 				break;
 			}
 
@@ -29,7 +29,7 @@ public class Mancala {
 				continue;
 			}
 			
-			model.move(house); //change game state. notifies observers
+			model.move(house); //change game state. notifies all observers
 		}
 	}
 }
