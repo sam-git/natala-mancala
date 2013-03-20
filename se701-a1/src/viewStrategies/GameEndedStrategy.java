@@ -1,8 +1,9 @@
-package strategies;
+package viewStrategies;
 
 import mancala.MancalaView;
 
-public class EndGameStrategy implements Strategy{
+
+public class GameEndedStrategy implements ViewStrategy{
 
 	@Override
 	public void accept(MancalaView view) {

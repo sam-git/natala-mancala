@@ -5,8 +5,9 @@ package mancala;
 
 import java.util.Observable;
 
-import strategies.EndGameStrategy;
-import strategies.MoveOverStrategy;
+import viewStrategies.GameEndedStrategy;
+import viewStrategies.GameQuitStrategy;
+import viewStrategies.MoveEndedStrategy;
 
 final class MancalaModel extends Observable {
 	private int[] houses;
@@ -127,12 +128,16 @@ final class MancalaModel extends Observable {
 		
 		setChanged();
 		if (this.isGameOver = hasGameEnded()) {
-			notifyObservers(new EndGameStrategy());
+			notifyObservers(new GameEndedStrategy());
 		} else {
-			notifyObservers(new MoveOverStrategy());
+			notifyObservers(new MoveEndedStrategy());
 		}
-		
-		
+	}
+	
+	public void quit() {
+		this.isGameOver = true;
+		setChanged();
+		notifyObservers(new GameQuitStrategy());
 	}
 
 	//*****************************************************

@@ -3,44 +3,38 @@ package mancala;
 import java.util.Observable;
 import java.util.Observer;
 
-import strategies.Strategy;
+import viewStrategies.ViewStrategy;
+
 
 /**
- * MancalaView defines a minimum set of methods that are needed by the Mancala controller
- * to directly manipulate the view.
+ * An abstract class that all MancalaViews must subclass.
+ * It provides methods that are automatically called during certain events in the model.
+ * If a subclass wishes to act upon those views it can override them.
  * 
- * All other methods required should be implemented by the concrete class and called from the 
- * Observer update() method when the Mancala model changes. 
+ * If a view wishes to be notified of new events in the model: 
+ * 	a new empty method must be added to this class.
+ *  a new strategy object for that method must be created.
+ *  all existing views that wish to act upon that event can override the new method locally.
+ *  
+ * It is up to child classes to keep a reference to the model, 
+ * and add itself as on addObserver of the model. 
  * 
  * @author Sam
  *
  */
 public abstract class MancalaView implements Observer {
 	
-	/**
-	 * Used by child classes to access the model. 
-	 */
-	protected MancalaModel model;
-	
-	/**
-	 * Associates a model with the view and adds the view as an observer of the model.
-	 * @param model
-	 */
-	public MancalaView(MancalaModel model) {
-		this.model = model;
-		model.addObserver(this);
-	}
-	
 	@Override
 	/**
 	 * Called by model when the game state changes.
 	 */
-	public void update(Observable arg0, Object arg1) {
-		Strategy strategy = (Strategy)arg1;
-		strategy.accept(this);
+	public void update(Observable arg0, Object strategy) {
+		((ViewStrategy)strategy).accept(this);
 	}
 	
-	public abstract void gameEnded();
+	public void gameEnded() {}
 
-	public abstract void moveEnded();
+	public void moveEnded() {}
+	
+	public void gameQuit() {}
 }

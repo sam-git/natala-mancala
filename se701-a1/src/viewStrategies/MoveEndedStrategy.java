@@ -1,8 +1,9 @@
-package strategies;
+package viewStrategies;
 
 import mancala.MancalaView;
 
-public class MoveOverStrategy implements Strategy{
+
+public class MoveEndedStrategy implements ViewStrategy{
 
 	@Override
 	public void accept(MancalaView view) {

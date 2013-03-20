@@ -1,7 +1,8 @@
-package strategies;
+package viewStrategies;
 
 import mancala.MancalaView;
 
-public interface Strategy {
+
+public interface ViewStrategy {
 	public void accept(MancalaView view);
 }

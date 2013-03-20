@@ -8,6 +8,7 @@ public interface MancalaInput {
 	public static final int cancelResult = -1;
 	/**
 	 * called by the controller to prompt the player for input.
+	 * should return MancalaInput.cancelResult if the player quits on their turn.
 	 * @return
 	 */
 	int promptPlayer();

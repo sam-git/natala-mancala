@@ -12,10 +12,12 @@ import utility.IO;
 public class MancalaASCIIView extends MancalaView implements MancalaInput{
 
 	private IO io;
+	private MancalaModel model;
 
-	public MancalaASCIIView(MancalaModel model, IO io) {		
-		super(model);
+	public MancalaASCIIView(MancalaModel model, IO io) {
 		this.io = io;
+		this.model = model;
+		model.addObserver(this); //adds view as observer to model;
 		printBoard();
 	}
 

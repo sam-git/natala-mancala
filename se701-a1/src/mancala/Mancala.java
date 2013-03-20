@@ -14,13 +14,13 @@ public class Mancala {
 	public void play(IO io) {
 		
 		MancalaModel model = new MancalaModel();
-		MancalaView asciiView = new MancalaASCIIView(model, io); //prints board, adds view as observer to model
+		MancalaView asciiView = new MancalaASCIIView(model, io); //prints board
 		MancalaInput input = (MancalaInput)asciiView; //input source
 			
 		int house;
 		while (!model.isGameOver())  {
 			if ((house = input.promptPlayer()) == MancalaInput.cancelResult) {
-				input.gameQuit();
+				model.quit();
 				break;
 			}
 
