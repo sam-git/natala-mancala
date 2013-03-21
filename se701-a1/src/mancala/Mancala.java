@@ -14,22 +14,27 @@ public class Mancala {
 	
 	public void play(IO io) {
 		
+		//set up MVC components
 		MancalaModel model = new MancalaModel();
-		MancalaView view = new MancalaASCIIView(model, io); //prints board, adds view as observer to model
-			
+		AbstractView asciiView = new MancalaASCIIView(model, io); //ASCIIView prints board on construction
+		model.addObserver(asciiView); //adds view as observer to model;
+		IMancalaInput input = (IMancalaInput) asciiView; //use ASCIIView as input source
+		
+		//game loop
 		int house;
 		while (!model.isGameOver())  {
-			if ((house = view.promptPlayer()) == MancalaView.cancelResult) {
-				view.gameQuit();
+			//get player input and check if they cancelled game.
+			if ((house = input.promptPlayer()) == IMancalaInput.cancelResult) {
+				model.quit(); //notifies all observers game was quit
 				break;
 			}
 
 			if (model.isHouseEmpty(house)) {
-				view.emptyHousePrompt();
+				input.emptyHousePrompt();
 				continue;
 			}
 			
-			model.move(house); //change game state. notifies observers
+			model.move(house); //changes game state. notifies all observers
 		}
 	}
 }

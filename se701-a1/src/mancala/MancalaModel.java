@@ -1,10 +1,15 @@
-/**
- * 
- */
 package mancala;
 
 import java.util.Observable;
 
+import viewStrategies.GameEndedStrategy;
+import viewStrategies.GameQuitStrategy;
+import viewStrategies.MoveEndedStrategy;
+
+/**
+ * The model for the Mancala game. Encapsulates all the game state and game logic.
+ * Is Observable and notifies all observers of change in state by passing them Strategy objects.
+ */
 final class MancalaModel extends Observable {
 	private int[] houses;
 	private int current_player;
@@ -16,6 +21,10 @@ final class MancalaModel extends Observable {
 		this.isGameOver = false;
 	}
 
+	/**
+	 * returns whether or not the game is over
+	 * @return
+	 */
 	public boolean isGameOver() {
 		return this.isGameOver;
 	}
@@ -29,18 +38,23 @@ final class MancalaModel extends Observable {
 		return current_player;
 	}
 
+	/**
+	 * return true if one or more seeds are in the current players selected house.
+	 * @param house
+	 * @return
+	 */
 	public boolean isHouseEmpty(int house) {
-		return (getHouseCount(current_player, house) == 0);
+		return (getSeedCount(current_player, house) == 0);
 	}
 
 	/**
-	 * returns the number value of a players house.
+	 * returns the number of seeds in a players house.
 	 * 
 	 * @param player
 	 * @param house
 	 * @return
 	 */
-	public int getHouseCount(int player, int house) {
+	public int getSeedCount(int player, int house) {
 
 		if (house == 0 && player == 1) {
 			return houses[7];
@@ -56,7 +70,7 @@ final class MancalaModel extends Observable {
 	}
 
 	/**
-	 * returns the score of a player at the end of a game
+	 * returns the score of a player at the end of a game.
 	 */
 	public int getScore(int player) {
 		int sum;
@@ -70,7 +84,7 @@ final class MancalaModel extends Observable {
 
 	/**
 	 * Makes a move for the current player. Updates houses and sets the current
-	 * player at the end of the move
+	 * player at the end of the move. Notifies Observers with a ViewStrategy.
 	 * 
 	 * @param house
 	 * @return
@@ -93,12 +107,20 @@ final class MancalaModel extends Observable {
 		for (int i = 0; i < seeds; i++) {
 			currentHouseIndex = (currentHouseIndex + 1) % 14;
 
+<<<<<<< HEAD
 			// skip if players land on opponents store
+=======
+			// skip if player lands on opponents base
+>>>>>>> visitorPattern
 			if (this.current_player == 1 && currentHouseIndex == 0) {
 				i -= 1;
 			} else if (this.current_player == 2 && currentHouseIndex == 7) {
 				i -= 1;
+<<<<<<< HEAD
 			} else { // otherwise increment current house
+=======
+			} else { // otherwise increment house
+>>>>>>> visitorPattern
 				houses[currentHouseIndex]++;
 			}
 		}
@@ -117,19 +139,32 @@ final class MancalaModel extends Observable {
 			houses[oppositeHouse] = 0;
 		}
 
-		// check for land on store and switch player
+		// check for land on own store and if not switch player
 		if (!houseIsPlayersStore(currentHouseIndex)) {
 			this.current_player = ((this.current_player) % 2) + 1;
 		}
 		
-		this.isGameOver = hasGameEnded();
+		//notify observers of end of move or end of game
 		setChanged();
-		notifyObservers();
+		if (this.isGameOver = hasGameEnded()) {
+			notifyObservers(new GameEndedStrategy());
+		} else {
+			notifyObservers(new MoveEndedStrategy());
+		}
+	}
+	
+	/**
+	 * notify observers that the game was quit before ending
+	 */
+	public void quit() {
+		this.isGameOver = true;
+		setChanged();
+		notifyObservers(new GameQuitStrategy());
 	}
 
-	//*****************************************************
-	// Private Functions
-	//
+//*****************************************************
+// Private Functions
+//
 
 	/**
 	 * Return the index of houses[] that corresponds to the users specified
