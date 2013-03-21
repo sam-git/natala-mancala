@@ -2,9 +2,10 @@ package mancala;
 
 import java.util.Observable;
 
-import viewStrategies.GameEndedStrategy;
-import viewStrategies.GameQuitStrategy;
-import viewStrategies.MoveEndedStrategy;
+import event_strategy.GameEndedStrategy;
+import event_strategy.GameQuitStrategy;
+import event_strategy.MoveEndedStrategy;
+
 
 /**
  * The model for the Mancala game. Encapsulates all the game state and game logic.

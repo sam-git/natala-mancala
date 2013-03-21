@@ -3,7 +3,8 @@ package mancala;
 import java.util.Observable;
 import java.util.Observer;
 
-import viewStrategies.IViewStrategy;
+import event_strategy.IEventStrategy;
+
 
 
 /**
@@ -29,8 +30,8 @@ public abstract class AbstractView implements Observer {
 	 * Called by model when the game state changes.
 	 * All views execute the given event strategy as necessary
 	 */
-	public void update(Observable arg0, Object strategy) {
-		((IViewStrategy)strategy).execute(this);
+	public final void update(Observable arg0, Object strategy) {
+		((IEventStrategy)strategy).execute(this);
 	}
 	
 //*****************************************************
