@@ -107,20 +107,12 @@ final class MancalaModel extends Observable {
 		for (int i = 0; i < seeds; i++) {
 			currentHouseIndex = (currentHouseIndex + 1) % 14;
 
-<<<<<<< HEAD
 			// skip if players land on opponents store
-=======
-			// skip if player lands on opponents base
->>>>>>> visitorPattern
 			if (this.current_player == 1 && currentHouseIndex == 0) {
 				i -= 1;
 			} else if (this.current_player == 2 && currentHouseIndex == 7) {
 				i -= 1;
-<<<<<<< HEAD
 			} else { // otherwise increment current house
-=======
-			} else { // otherwise increment house
->>>>>>> visitorPattern
 				houses[currentHouseIndex]++;
 			}
 		}
