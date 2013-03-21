@@ -17,7 +17,7 @@ import viewStrategies.IViewStrategy;
  *  all existing views that wish to act upon that event can override the new method locally.
  *  
  * It is up to child classes to keep a reference to the model, 
- * and add itself as on addObserver of the model. 
+ * and the programmer to add the view as on addObserver of the model. 
  * 
  * @author Sam
  *
@@ -27,6 +27,7 @@ public abstract class AbstractView implements Observer {
 	@Override
 	/**
 	 * Called by model when the game state changes.
+	 * All views execute the given event strategy as necessary
 	 */
 	public void update(Observable arg0, Object strategy) {
 		((IViewStrategy)strategy).execute(this);
