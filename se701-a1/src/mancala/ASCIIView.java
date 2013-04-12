@@ -1,7 +1,7 @@
 package mancala;
 
-import board.BoardState;
 import utility.IO;
+import board.IBoard;
 
 /**
  * Concrete class acting as a View and as Input for the Mancala game.
@@ -9,14 +9,14 @@ import utility.IO;
  * @author Sam
  * 
  */
-public class MancalaASCIIView extends AbstractView implements IMancalaInput{
+public class ASCIIView extends AbstractView implements IMancalaInput{
 
-	private IO io;
-	private BoardState model;
+	private final IO io;
+	private final IBoard board;
 
-	public MancalaASCIIView(BoardState model, IO io) {
+	public ASCIIView(IBoard board, IO io) {
 		this.io = io;
-		this.model = model;
+		this.board = board;
 		printBoard(); //ASCII views print board first
 	}
 	
@@ -37,7 +37,7 @@ public class MancalaASCIIView extends AbstractView implements IMancalaInput{
 	 */
 	@Override
 	public int promptPlayer() {
-		String prompt = "Player " + model.getCurrentPlayer()
+		String prompt = "Player " + board.getCurrentPlayer()
 				+ "'s turn - Specify house number or 'q' to quit: ";
 		return io.readInteger(prompt, 1, 6, IMancalaInput.cancelResult, "q");
 	}
@@ -69,26 +69,11 @@ public class MancalaASCIIView extends AbstractView implements IMancalaInput{
 	/**
 	 * Print an ASCII representation of the current board to io.
 	 */
-	private void printBoard() {
-
-		io.println("+----+-------+-------+-------+-------+-------+-------+----+");
-		String line2 = String
-				.format("| P2 | 6[%2d] | 5[%2d] | 4[%2d] | 3[%2d] | 2[%2d] | 1[%2d] | %2d |",
-						model.getSeedCount(2, 6), model.getSeedCount(2, 5),
-						model.getSeedCount(2, 4), model.getSeedCount(2, 3),
-						model.getSeedCount(2, 2), model.getSeedCount(2, 1),
-						model.getSeedCount(1, 0));
-		io.println(line2);
-		io.println("|    |-------+-------+-------+-------+-------+-------|    |");
-		String line4 = String
-				.format("| %2d | 1[%2d] | 2[%2d] | 3[%2d] | 4[%2d] | 5[%2d] | 6[%2d] | P1 |",
-						model.getSeedCount(2, 0), model.getSeedCount(1, 1),
-						model.getSeedCount(1, 2), model.getSeedCount(1, 3),
-						model.getSeedCount(1, 4), model.getSeedCount(1, 5),
-						model.getSeedCount(1, 6));
-		io.println(line4);
-		io.println("+----+-------+-------+-------+-------+-------+-------+----+");
-
+	private void printBoard() {		
+		String[] lines = board.toStringArray();
+		for (int i = 0; i < lines.length; i++) {
+			io.println(lines[i]);
+		}
 	}
 
 	/**
@@ -104,8 +89,8 @@ public class MancalaASCIIView extends AbstractView implements IMancalaInput{
 	 * Print the score and the winner at the end of a completed game
 	 */
 	private void printScores() {
-		int player1 = model.getScore(1);
-		int player2 = model.getScore(2);
+		int player1 = board.getScore(1);
+		int player2 = board.getScore(2);
 		io.println("	player 1:" + player1);
 		io.println("	player 2:" + player2);
 		if (player1 > player2) {

@@ -1,5 +1,8 @@
 package mancala;
 
+import board.IBoard;
+import board.BoardState;
+import board.EwanBoard;
 import utility.IO;
 import utility.MockIO;
 
@@ -15,26 +18,29 @@ public class Mancala {
 	public void play(IO io) {
 		
 		//set up MVC components
-		MancalaModel model = new MancalaModel();
-		AbstractView asciiView = new MancalaASCIIView(model, io); //ASCIIView prints board on construction
-		model.addObserver(asciiView); //adds view as observer to model;
-		IMancalaInput input = (IMancalaInput) asciiView; //use ASCIIView as input source
+		//model
+		IBoard board = new EwanBoard();
+		//view
+		ASCIIView asciiView = new ASCIIView(board, io);
+		board.addObserver(asciiView);
+		//input
+		IMancalaInput input = asciiView; //use ASCIIView as input source
 		
 		//game loop
 		int house;
-		while (!model.isGameOver())  {
+		while (!board.isGameOver())  {
 			//get player input and check if they cancelled game.
 			if ((house = input.promptPlayer()) == IMancalaInput.cancelResult) {
-				model.quit(); //notifies all observers game was quit
+				board.quit(); //notifies all observers game was quit
 				break;
 			}
 
-			if (model.isHouseEmpty(house)) {
+			if (board.isHouseEmpty(house)) {
 				input.emptyHousePrompt();
 				continue;
 			}
 			
-			model.move(house); //changes game state. notifies all observers
+			board.move(house); //changes game state. notifies all observers
 		}
 	}
 }

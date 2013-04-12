@@ -27,7 +27,7 @@ public abstract class AbstractView implements Observer {
 	
 	@Override
 	/**
-	 * Called by model when the game state changes.
+	 * Called by model??? when the game state changes.
 	 * All views execute the given event strategy as necessary
 	 */
 	public final void update(Observable arg0, Object strategy) {

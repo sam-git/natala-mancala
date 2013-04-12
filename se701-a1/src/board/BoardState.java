@@ -1,22 +1,20 @@
-package mancala;
+package board;
 
 import java.util.Observable;
+import event_strategy.EventStrategyFactory;
 
-import event_strategy.GameEndedStrategy;
-import event_strategy.GameQuitStrategy;
-import event_strategy.MoveEndedStrategy;
 
 
 /**
  * The model for the Mancala game. Encapsulates all the game state and game logic.
  * Is Observable and notifies all observers of change in state by passing them Strategy objects.
  */
-final class MancalaModel extends Observable {
+public class BoardState extends Observable {
 	private int[] houses;
 	private int current_player;
 	private boolean isGameOver;
 
-	public MancalaModel() {
+	public BoardState() {
 		this.houses = new int[] { 0, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4 };
 		this.current_player = 1;
 		this.isGameOver = false;
@@ -140,9 +138,9 @@ final class MancalaModel extends Observable {
 		//notify observers of end of move or end of game
 		setChanged();
 		if (this.isGameOver = hasGameEnded()) {
-			notifyObservers(new GameEndedStrategy());
+			notifyObservers(EventStrategyFactory.gameEndedStrategy());
 		} else {
-			notifyObservers(new MoveEndedStrategy());
+			notifyObservers(EventStrategyFactory.moveEndedStrategy());
 		}
 	}
 	
@@ -152,7 +150,7 @@ final class MancalaModel extends Observable {
 	public void quit() {
 		this.isGameOver = true;
 		setChanged();
-		notifyObservers(new GameQuitStrategy());
+		notifyObservers(EventStrategyFactory.gameQuitStrategy());
 	}
 
 //*****************************************************
