@@ -2,6 +2,9 @@ package mancala;
 
 import utility.IO;
 import utility.MockIO;
+import view.ASCIIView;
+import view.AbstractView;
+import view.IMancalaInput;
 import board.AbstractBoard;
 import board.KalahBoard;
 

@@ -1,7 +1,7 @@
 
-package event_strategy;
+package view.event_strategy;
 
-import mancala.AbstractView;
+import view.AbstractView;
 
 /**
  * Interface that is used by the Model to send concrete objects containing the method to be called in views

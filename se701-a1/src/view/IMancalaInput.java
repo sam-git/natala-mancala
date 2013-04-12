@@ -1,4 +1,4 @@
-package mancala;
+package view;
 
 /**
  * Interface that  must be implemented by any class acting as the input to the Mancala game.

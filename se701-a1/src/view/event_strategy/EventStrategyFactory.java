@@ -1,6 +1,6 @@
-package event_strategy;
+package view.event_strategy;
 
-import mancala.AbstractView;
+import view.AbstractView;
 
 public class EventStrategyFactory {
 

@@ -1,7 +1,8 @@
 package board;
 
 import java.util.Observable;
-import event_strategy.EventStrategyFactory;
+
+import view.event_strategy.EventStrategyFactory;
 
 
 

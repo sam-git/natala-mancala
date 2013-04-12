@@ -1,4 +1,4 @@
-package mancala;
+package view;
 
 import utility.IO;
 import board.AbstractBoard;
