@@ -1,7 +1,7 @@
 package mancala;
 
 import utility.IO;
-import board.IBoard;
+import board.AbstractBoard;
 
 /**
  * Concrete class acting as a View and as Input for the Mancala game.
@@ -12,9 +12,9 @@ import board.IBoard;
 public class ASCIIView extends AbstractView implements IMancalaInput{
 
 	private final IO io;
-	private final IBoard board;
+	private final AbstractBoard board;
 
-	public ASCIIView(IBoard board, IO io) {
+	public ASCIIView(AbstractBoard board, IO io) {
 		this.io = io;
 		this.board = board;
 		printBoard(); //ASCII views print board first
@@ -39,7 +39,10 @@ public class ASCIIView extends AbstractView implements IMancalaInput{
 	public int promptPlayer() {
 		String prompt = "Player " + board.getCurrentPlayer()
 				+ "'s turn - Specify house number or 'q' to quit: ";
-		return io.readInteger(prompt, 1, 6, IMancalaInput.cancelResult, "q");
+		return io.readInteger(prompt, 
+				1, 
+				board.getHousesPerPlayer(), 
+				IMancalaInput.cancelResult, "q");
 	}
 	
 //*****************************************************

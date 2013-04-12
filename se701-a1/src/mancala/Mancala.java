@@ -1,10 +1,9 @@
 package mancala;
 
-import board.IBoard;
-import board.BoardState;
-import board.EwanBoard;
 import utility.IO;
 import utility.MockIO;
+import board.AbstractBoard;
+import board.KalahBoard;
 
 /**
  * This class is the starting point for SOFTENG 701 Assignment 1.1 in 2013.
@@ -19,10 +18,11 @@ public class Mancala {
 		
 		//set up MVC components
 		//model
-		IBoard board = new EwanBoard();
-		//view
+		AbstractBoard board = new KalahBoard();
 		ASCIIView asciiView = new ASCIIView(board, io);
-		board.addObserver(asciiView);
+		//view
+		AbstractView view = asciiView; //use asciiView as view.
+		board.addObserver(view); //the view observes the model
 		//input
 		IMancalaInput input = asciiView; //use ASCIIView as input source
 		
