@@ -3,15 +3,15 @@ package board;
 public class House extends PitClass {
 	public static int startingSeedCount;
 	
-	private PitClass oppositePit;
+	private House oppositeHouse;
 	
 	public House(Player owner) {
 		super(owner);
 		super.setStartingSeedCount(startingSeedCount);
 	}
 	
-	public void setOppositePit(PitClass oppositePit) {
-		this.oppositePit = oppositePit;
+	public void setOppositeHouse(House oppositeHouse) {
+		this.oppositeHouse = oppositeHouse;
 	}
 
 	

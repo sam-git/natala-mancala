@@ -21,7 +21,7 @@ public class GameModel extends Observable {
 
 	public GameModel(int housesPerPlayer, int startingSeedsPerHouse) {
 		House.startingSeedCount = startingSeedsPerHouse;
-		Player.housesCount = housesPerPlayer;
+		Player.setHousesCount(housesPerPlayer);
 		this.current_player = 1;
 		this.isGameOver = false;
 		this.intToPlayer = new HashMap<Integer, Player>();

@@ -4,7 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Player {
-	public static int housesCount;
+	private static int housesCount = Integer.MIN_VALUE;
+	public static void setHousesCount(int housesCount) {
+		if (Player.housesCount != Integer.MIN_VALUE) {
+			throw new RuntimeException("Player.housesCount is already set.");
+		} else if (housesCount < 1) {
+			throw new RuntimeException("Player.housesCount must be > 0.");
+		}
+        Player.housesCount = housesCount;
+    }
+	public static int getHousesCount() {
+		if (Player.housesCount == Integer.MIN_VALUE) {
+			throw new RuntimeException("Player.housesCount has not been set.");
+		}
+		return Player.housesCount;
+	}
 	
 	private String name;
 	private Store store;
@@ -36,10 +50,6 @@ public class Player {
 		return score;
 	}
 	
-	public void join (Player other) {
-		this.store.setNextPit(other.intToHouse.get(1));
-	}
-	
 	public static void join(Player p1, Player p2) {
 		p1.store.setNextPit(p2.intToHouse.get(1));
 		p2.store.setNextPit(p1.intToHouse.get(1));
@@ -47,16 +57,17 @@ public class Player {
 		for (Map.Entry<Integer, House> entry : p1.intToHouse.entrySet()) {
 		    int p1HouseInt = entry.getKey();
 		    House p1House = entry.getValue();
-		    House p2House = p2.intToHouse.get(Player.housesCount + 1 - p1HouseInt);
-		    p1House.setOppositePit(p2House);
-		    p2House.setOppositePit(p1House);
+		    House p2House = p2.intToHouse.get(Player.getHousesCount() + 1 - p1HouseInt);
+		    p1House.setOppositeHouse(p2House);
+		    p2House.setOppositeHouse(p1House);
 		}
 	}
 
-	////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+	
 	private void createHouses(){
 		House.Builder hb = new House.Builder(this);
-		for (int i = 0; i < Player.housesCount; i++) {
+		for (int i = 0; i < Player.getHousesCount(); i++) {
 			addHouseToMap(hb.buildHouse());
 		}
 	}
@@ -66,6 +77,6 @@ public class Player {
 	}
 	
 	private PitClass getLastHouse(){
-		return intToHouse.get(housesCount);
+		return intToHouse.get(Player.getHousesCount());
 	}
 }
