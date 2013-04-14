@@ -13,16 +13,6 @@ public abstract class AbstractPit {
 	
 	public abstract void addOneSeedFromCollection(SeedCollection s);
 	
-//	protected void addSeedCollection(SeedCollection s){
-//		this.seedCount += s.getSeedCount();
-//	}
-	
-//	protected SeedCollection takeAllSeeds() {
-//		SeedCollection s = new SeedCollection(seedCount, owner);
-//		seedCount = 0;
-//		return s;
-//	}
-	
 	protected Player getOwner() {
 		return owner;
 	}
