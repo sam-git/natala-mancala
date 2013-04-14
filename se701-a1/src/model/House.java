@@ -1,6 +1,6 @@
-package board;
+package model;
 
-public class House extends PitClass {
+public class House extends AbstractPit {
 	
 	private House oppositeHouse;
 	
@@ -9,11 +9,9 @@ public class House extends PitClass {
 	}
 	
 	public void deposit(SeedCollection s) {
-		if (s.isLastSeed() 
-				&& this.getSeedCount() == 0
-				&& this.getOwner() == s.getOwner()) {
+		if (s.isLastSeed() && this.isHouseEmpty() && this.getOwner() == s.getOwner()) {
 			
-			PitClass store = this.getOwner().getStore();
+			AbstractPit store = this.getOwner().getStore();
 			s.decrement();
 			store.increment();
 			
@@ -23,6 +21,10 @@ public class House extends PitClass {
 			s.decrement();
 			this.increment();
 		}
+	}
+
+	public boolean isHouseEmpty() {
+		return this.getSeedCount() == 0;
 	}
 	
 	public void setOppositeHouse(House oppositeHouse) {

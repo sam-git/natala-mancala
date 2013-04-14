@@ -1,4 +1,4 @@
-package board;
+package model;
 
 public class SeedCollection {
 	private int seedCount;

@@ -1,8 +1,7 @@
 package view;
 
+import model.GameModel;
 import utility.IO;
-import board.GameModel;
-import board._AbstractBoard;
 
 /**
  * Concrete class acting as a View and as Input for the Mancala game.
@@ -24,7 +23,6 @@ public class ASCIIView extends AbstractView implements IMancalaInput{
 //*****************************************************
 // MancalaInput Functions
 //
-	
 
 	/**
 	 * prompt the user to make a move, and returns an integer from 1 to 6 if the
@@ -41,15 +39,15 @@ public class ASCIIView extends AbstractView implements IMancalaInput{
 				IMancalaInput.cancelResult, "q");
 	}
 	
-	//both interfaces at present
+//*****************************************************
+// MancalaView Overridden Functions
+//
+	
 	@Override
 	public void emptyHousePrompt() {
 		io.println("House is empty. Move again.");
 		printBoard();
 	}
-//*****************************************************
-// MancalaView Overridden Functions
-//
 	
 	@Override
 	public void gameQuit() {

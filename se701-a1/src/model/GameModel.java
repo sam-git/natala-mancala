@@ -1,10 +1,11 @@
-package board;
+package model;
 
-import gameType.GameRules;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
+
+import rules.IGameRules;
 
 import view.event_strategy.EventStrategyFactory;
 
@@ -19,9 +20,9 @@ public class GameModel extends Observable {
 	private int current_player;
 	private boolean isGameOver;
 	private Map<Integer, Player> intToPlayer;
-	private final GameRules rules;
+	private final IGameRules rules;
 	
-	public GameModel(GameRules rules) {
+	public GameModel(IGameRules rules) {
 		this.current_player = rules.getStartingPlayer();
 		this.isGameOver = false;
 		this.intToPlayer = new HashMap<Integer, Player>();
@@ -52,14 +53,6 @@ public class GameModel extends Observable {
 	public boolean isGameOver() {
 		return this.isGameOver;
 	}
-
-//	/**
-//	 * returns the current player. 1 or 2
-//	 * @return
-//	 */
-//	public int getCurrentPlayer() {
-//		return current_player;
-//	}
 	
 	public String getCurrentPlayerName() {
 		return intToPlayer.get(current_player).getName();

@@ -1,12 +1,12 @@
-package board;
+package model;
 
-public abstract class PitClass {
+public abstract class AbstractPit {
 	
 	private int seedCount;
-	private PitClass nextPit;
+	private AbstractPit nextPit;
 	private Player owner;
 
-	public PitClass(Player owner, int startingSeeds) {
+	public AbstractPit(Player owner, int startingSeeds) {
 		this.owner = owner;
 		this.seedCount = startingSeeds;
 	}
@@ -31,11 +31,11 @@ public abstract class PitClass {
 		return s;
 	}
 	
-	public PitClass getNextPit() {
+	public AbstractPit getNextPit() {
 		return nextPit;
 	}
 
-	protected void setNextPit(PitClass nextPit) {
+	protected void setNextPit(AbstractPit nextPit) {
 		this.nextPit = nextPit;
 	}
 

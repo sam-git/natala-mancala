@@ -1,31 +1,17 @@
-package board;
+package model;
 
-import gameType.GameRules;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import rules.IGameRules;
+
 public class Player {
-//	private static int housesCount = Integer.MIN_VALUE;
-//	public static void setHousesCount(int housesCount) {
-//		if (Player.housesCount != Integer.MIN_VALUE) {
-//			throw new RuntimeException("Player.housesCount is already set.");
-//		} else if (housesCount < 1) {
-//			throw new RuntimeException("Player.housesCount must be > 0.");
-//		}
-//        Player.housesCount = housesCount;
-//    }
-//	public static int getHousesCount() {
-//		if (Player.housesCount == Integer.MIN_VALUE) {
-//			throw new RuntimeException("Player.housesCount has not been set.");
-//		}
-//		return Player.housesCount;
-//	}
 	private String name;
 	private Store store;
 	private Map<Integer, House> intToHouse;
 	
-	public Player(GameRules rules, String name) {
+	public Player(IGameRules rules, String name) {
 		this.name = name;
 		this.intToHouse = new HashMap<Integer, House>();
 		this.store = new Store(this, rules.getStartingSeedsPerStore());
@@ -36,7 +22,7 @@ public class Player {
 	public boolean move(int house) {
 		House h = intToHouse.get(house);
 		SeedCollection s = h.takeAllSeeds();
-		PitClass p = h;
+		AbstractPit p = h;
 		while (!s.isEmpty()) {
 			 p = p.getNextPit();
 			 p.deposit(s);
@@ -72,7 +58,7 @@ public class Player {
 		return seeds;
 	}
 	
-	public static void join(Player p1, Player p2, GameRules rules) {
+	public static void join(Player p1, Player p2, IGameRules rules) {
 		p1.store.setNextPit(p2.intToHouse.get(1));
 		p2.store.setNextPit(p1.intToHouse.get(1));
 		
@@ -86,9 +72,13 @@ public class Player {
 		}
 	}
 
+	public Store getStore() {
+		return store;
+	}
+	
 ///////////////////////////////////////////////////////////////
 	
-	private void createHouses(GameRules rules){		
+	private void createHouses(IGameRules rules){		
 		House.Builder hb = new House.Builder(this, rules.getStartingSeedsPerHouse());
 		for (int i = 0; i < rules.getHousesPerPlayer(); i++) {
 			intToHouse.put(intToHouse.size()+1, hb.buildHouse());
@@ -97,7 +87,4 @@ public class Player {
 		 intToHouse.get(intToHouse.size()).setNextPit(this.store);
 	}
 
-	public Store getStore() {
-		return store;
-	}
 }

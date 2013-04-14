@@ -1,8 +1,8 @@
-package gameType;
+package rules;
 
-import board.GameModel;
+import model.GameModel;
 
-public interface GameRules {
+public interface IGameRules {
 	
 	public String[] toStringArray(GameModel m);
 	public int getHousesPerPlayer();

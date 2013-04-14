@@ -16,9 +16,4 @@ public interface IMancalaInput {
 	 * @return
 	 */
 	int promptPlayer();
-	
-	/**
-	 * called by the controller if a player specified an empty house. 
-	 */
-	void emptyHousePrompt();
 }

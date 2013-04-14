@@ -1,6 +1,6 @@
-package board;
+package model;
 
-public class Store extends PitClass{
+public class Store extends AbstractPit{
 	Player player;
 
 	public Store(Player owner, int startingSeeds) {

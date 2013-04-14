@@ -1,8 +1,8 @@
-package gameType;
+package rules;
 
-import board.GameModel;
+import model.GameModel;
 
-public class KalahBoard implements GameRules {
+public class KalahRules implements IGameRules {
 	
 	private final static int STARTING_SEEDS_PER_HOUSE = 4;
 	private final static int HOUSES_PER_PLAYER = 6;
