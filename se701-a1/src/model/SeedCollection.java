@@ -21,7 +21,13 @@ public class SeedCollection {
 		return this.owner;
 	}
 	
-	public void decrement() {
+	public int removeAllSeeds() {
+		int temp = this.seedCount;
+		this.seedCount = 0;
+		return temp;
+	}
+	
+	public void removeOneSeed() {
 		if (seedCount > 0) {
 			seedCount--;
 		} else {

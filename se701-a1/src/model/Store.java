@@ -8,10 +8,14 @@ public class Store extends AbstractPit{
 	}
 
 	@Override
-	public void deposit(SeedCollection s) {
+	public void addOneSeedFromCollection(SeedCollection s) {
 		if (s.getOwner() == this.getOwner()) {
-			this.increment();
-			s.decrement();
+			this.addOneSeed();
+			s.removeOneSeed();
 		}
-	}	
+	}
+	
+	protected void addSeedCollection(SeedCollection s){
+		this.setSeedCount(this.getSeedCount() + s.removeAllSeeds());
+	}
 }

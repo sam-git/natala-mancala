@@ -21,14 +21,13 @@ public class Player {
 	
 	public boolean move(int house) {
 		House h = intToHouse.get(house);
-		SeedCollection s = h.takeAllSeeds();
-		AbstractPit p = h;
+		SeedCollection s = h.removeAllSeeds();
+		AbstractPit pit = h;
 		while (!s.isEmpty()) {
-			 p = p.getNextPit();
-			 p.deposit(s);
+			 pit = pit.getNextPit();
+			 pit.addOneSeedFromCollection(s);
 		}
-		boolean endedOnOwnStore = (this.store == p);
-		return endedOnOwnStore;
+		return (this.store == pit); //endedOnOwnStore?
 	}
 	
 	public int getSeedCount(int house) {
@@ -86,5 +85,4 @@ public class Player {
 		//join last pit to store
 		 intToHouse.get(intToHouse.size()).setNextPit(this.store);
 	}
-
 }

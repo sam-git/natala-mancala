@@ -8,19 +8,24 @@ public class House extends AbstractPit {
 		super(owner, startingSeedCount);
 	}
 	
-	protected void deposit(SeedCollection s) {
+	public void addOneSeedFromCollection(SeedCollection s) {
 		if (s.isLastSeed() && this.isHouseEmpty() && this.getOwner() == s.getOwner()) {
 			
-			AbstractPit store = this.getOwner().getStore();
-			s.decrement();
-			store.increment();
+			Store store = this.getOwner().getStore();
+			store.addSeedCollection(s);
 			
-			SeedCollection steal = this.getOppositeHouse().takeAllSeeds();
+			SeedCollection steal = this.getOppositeHouse().removeAllSeeds();
 			store.addSeedCollection(steal);
 		} else {
-			s.decrement();
-			this.increment();
+			s.removeOneSeed();
+			this.addOneSeed();
 		}
+	}
+	
+	protected SeedCollection removeAllSeeds() {
+		SeedCollection s = new SeedCollection(this.getSeedCount(), this.getOwner());
+		this.setSeedCount(0);
+		return s;
 	}
 
 	public boolean isHouseEmpty() {

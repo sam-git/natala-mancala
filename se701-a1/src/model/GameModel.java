@@ -139,10 +139,10 @@ public class GameModel extends Observable {
 	 */
 	private boolean hasGameEnded() {
 		boolean answer = false;
-		if (intToPlayer.get(1).getTotalSeedsInHouses() == 0) {
-			answer = true;
-		} else if (intToPlayer.get(2).getTotalSeedsInHouses() == 0) {
-			answer = true;
+		for (Player p : intToPlayer.values()) {
+			if (p.getTotalSeedsInHouses() == 0) {
+				answer = true;
+			}
 		}
 		return answer;
 	}

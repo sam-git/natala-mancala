@@ -11,24 +11,24 @@ public abstract class AbstractPit {
 		this.seedCount = startingSeeds;
 	}
 	
-	protected abstract void deposit(SeedCollection s);
+	public abstract void addOneSeedFromCollection(SeedCollection s);
+	
+//	protected void addSeedCollection(SeedCollection s){
+//		this.seedCount += s.getSeedCount();
+//	}
+	
+//	protected SeedCollection takeAllSeeds() {
+//		SeedCollection s = new SeedCollection(seedCount, owner);
+//		seedCount = 0;
+//		return s;
+//	}
 	
 	protected Player getOwner() {
 		return owner;
 	}
 	
-	protected void addSeedCollection(SeedCollection s){
-		this.seedCount += s.getSeedCount();
-	}
-	
-	protected void increment() {
+	protected void addOneSeed() {
 		seedCount++;
-	}
-	
-	protected SeedCollection takeAllSeeds() {
-		SeedCollection s = new SeedCollection(seedCount, owner);
-		seedCount = 0;
-		return s;
 	}
 	
 	protected AbstractPit getNextPit() {
@@ -41,5 +41,9 @@ public abstract class AbstractPit {
 
 	protected int getSeedCount() {
 		return seedCount;
+	}
+	
+	protected void setSeedCount(int seeds) {
+		this.seedCount = seeds;
 	}
 }
