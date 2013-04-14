@@ -3,6 +3,14 @@ package view.event_strategy;
 import view.AbstractView;
 
 public class EventStrategyFactory {
+	
+	public static IEventStrategy houseEmptyStrategy() {
+		return new IEventStrategy() {
+			public void execute(AbstractView view) {
+				view.emptyHousePrompt();
+			}
+		};
+	}
 
 	public static IEventStrategy gameEndedStrategy() {
 		return new IEventStrategy() {

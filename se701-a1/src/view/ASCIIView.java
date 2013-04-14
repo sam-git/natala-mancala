@@ -1,6 +1,7 @@
 package view;
 
 import utility.IO;
+import board.GameModel;
 import board._AbstractBoard;
 
 /**
@@ -12,11 +13,11 @@ import board._AbstractBoard;
 public class ASCIIView extends AbstractView implements IMancalaInput{
 
 	private final IO io;
-	private final _AbstractBoard board;
+	private final GameModel model;
 
-	public ASCIIView(_AbstractBoard board, IO io) {
+	public ASCIIView(GameModel model, IO io) {
 		this.io = io;
-		this.board = board;
+		this.model = model;
 		printBoard(); //ASCII views print board first
 	}
 	
@@ -24,11 +25,6 @@ public class ASCIIView extends AbstractView implements IMancalaInput{
 // MancalaInput Functions
 //
 	
-	@Override
-	public void emptyHousePrompt() {
-		io.println("House is empty. Move again.");
-		printBoard();
-	}
 
 	/**
 	 * prompt the user to make a move, and returns an integer from 1 to 6 if the
@@ -37,14 +33,20 @@ public class ASCIIView extends AbstractView implements IMancalaInput{
 	 */
 	@Override
 	public int promptPlayer() {
-		String prompt = "Player " + board.getCurrentPlayer()
+		String prompt = model.getCurrentPlayerName()
 				+ "'s turn - Specify house number or 'q' to quit: ";
 		return io.readInteger(prompt, 
 				1, 
-				board.getHousesPerPlayer(), 
+				model.getHousesPerPlayer(), 
 				IMancalaInput.cancelResult, "q");
 	}
 	
+	//both interfaces at present
+	@Override
+	public void emptyHousePrompt() {
+		io.println("House is empty. Move again.");
+		printBoard();
+	}
 //*****************************************************
 // MancalaView Overridden Functions
 //
@@ -73,7 +75,7 @@ public class ASCIIView extends AbstractView implements IMancalaInput{
 	 * Print an ASCII representation of the current board to io.
 	 */
 	private void printBoard() {		
-		String[] lines = board.toStringArray();
+		String[] lines = model.toStringArray();
 		for (int i = 0; i < lines.length; i++) {
 			io.println(lines[i]);
 		}
@@ -92,8 +94,8 @@ public class ASCIIView extends AbstractView implements IMancalaInput{
 	 * Print the score and the winner at the end of a completed game
 	 */
 	private void printScores() {
-		int player1 = board.getScore(1);
-		int player2 = board.getScore(2);
+		int player1 = model.getScore(1);
+		int player2 = model.getScore(2);
 		io.println("	player 1:" + player1);
 		io.println("	player 2:" + player2);
 		if (player1 > player2) {

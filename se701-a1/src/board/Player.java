@@ -33,6 +33,18 @@ public class Player {
 		this.createHouses(rules); //links all houses and store
 	}
 	
+	public boolean move(int house) {
+		House h = intToHouse.get(house);
+		SeedCollection s = h.takeAllSeeds();
+		PitClass p = h;
+		while (!s.isEmpty()) {
+			 p = p.getNextPit();
+			 p.deposit(s);
+		}
+		boolean endedOnOwnStore = (this.store == p);
+		return endedOnOwnStore;
+	}
+	
 	public int getSeedCount(int house) {
 		return intToHouse.get(house).getSeedCount();
 	}
@@ -47,11 +59,17 @@ public class Player {
 
 	public int getScore() {
 		int score = 0;
-		for (House house : intToHouse.values()) {
-			score += house.getSeedCount();	
-		}
+		score += getTotalSeedsInHouses();
 		score += this.store.getSeedCount();
 		return score;
+	}
+	
+	public int getTotalSeedsInHouses() {
+		int seeds = 0;
+		for (House house : intToHouse.values()) {
+			seeds += house.getSeedCount();	
+		}
+		return seeds;
 	}
 	
 	public static void join(Player p1, Player p2, GameRules rules) {
@@ -62,7 +80,7 @@ public class Player {
 		for (Map.Entry<Integer, House> entry : p1.intToHouse.entrySet()) {
 		    int p1HouseInt = entry.getKey();
 		    House p1House = entry.getValue();
-		    House p2House = p2.intToHouse.get(rules.gethousesPerPlayer() + 1 - p1HouseInt);
+		    House p2House = p2.intToHouse.get(rules.getHousesPerPlayer() + 1 - p1HouseInt);
 		    p1House.setOppositeHouse(p2House);
 		    p2House.setOppositeHouse(p1House);
 		}
@@ -72,13 +90,14 @@ public class Player {
 	
 	private void createHouses(GameRules rules){		
 		House.Builder hb = new House.Builder(this, rules.getStartingSeedsPerHouse());
-		for (int i = 0; i < rules.gethousesPerPlayer(); i++) {
-			addHouseToMap(hb.buildHouse());
+		for (int i = 0; i < rules.getHousesPerPlayer(); i++) {
+			intToHouse.put(intToHouse.size()+1, hb.buildHouse());
 		}
-		 intToHouse.get(rules.gethousesPerPlayer()).setNextPit(this.store);
+		//join last pit to store
+		 intToHouse.get(intToHouse.size()).setNextPit(this.store);
 	}
-	
-	private void addHouseToMap(House house) {
-		intToHouse.put(intToHouse.size()+1, house);
+
+	public Store getStore() {
+		return store;
 	}
 }

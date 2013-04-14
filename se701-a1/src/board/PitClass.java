@@ -11,7 +11,27 @@ public abstract class PitClass {
 		this.seedCount = startingSeeds;
 	}
 	
-	protected PitClass getNextPit() {
+	public abstract void deposit(SeedCollection s);
+	
+	public Player getOwner() {
+		return owner;
+	}
+	
+	protected void addSeedCollection(SeedCollection s){
+		this.seedCount += s.getSeedCount();
+	}
+	
+	protected void increment() {
+		seedCount++;
+	}
+	
+	protected SeedCollection takeAllSeeds() {
+		SeedCollection s = new SeedCollection(seedCount, owner);
+		seedCount = 0;
+		return s;
+	}
+	
+	public PitClass getNextPit() {
 		return nextPit;
 	}
 

@@ -8,8 +8,29 @@ public class House extends PitClass {
 		super(owner, startingSeedCount);
 	}
 	
+	public void deposit(SeedCollection s) {
+		if (s.isLastSeed() 
+				&& this.getSeedCount() == 0
+				&& this.getOwner() == s.getOwner()) {
+			
+			PitClass store = this.getOwner().getStore();
+			s.decrement();
+			store.increment();
+			
+			SeedCollection steal = this.getOppositeHouse().takeAllSeeds();
+			store.addSeedCollection(steal);
+		} else {
+			s.decrement();
+			this.increment();
+		}
+	}
+	
 	public void setOppositeHouse(House oppositeHouse) {
 		this.oppositeHouse = oppositeHouse;
+	}
+
+	private House getOppositeHouse() {
+		return oppositeHouse;
 	}
 	
 	public static class Builder {
@@ -28,7 +49,8 @@ public class House extends PitClass {
 			if (previousHouse != null) {
 				previousHouse.setNextPit(house);
 			}
+			previousHouse = house;
 			return house;
 		}
-	}	
+	}
 }

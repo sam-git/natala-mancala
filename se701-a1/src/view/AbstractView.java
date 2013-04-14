@@ -40,8 +40,8 @@ public abstract class AbstractView implements Observer {
 //	the events when notified of them by the Model.
 	
 	public void gameEnded() {}
-
 	public void moveEnded() {}
-	
 	public void gameQuit() {}
+	public void emptyHousePrompt() {}
+	
 }
