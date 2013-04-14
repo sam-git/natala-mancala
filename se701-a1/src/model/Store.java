@@ -13,6 +13,5 @@ public class Store extends AbstractPit{
 			this.increment();
 			s.decrement();
 		}
-	}
-	
+	}	
 }

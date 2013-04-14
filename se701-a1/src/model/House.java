@@ -8,7 +8,7 @@ public class House extends AbstractPit {
 		super(owner, startingSeedCount);
 	}
 	
-	public void deposit(SeedCollection s) {
+	protected void deposit(SeedCollection s) {
 		if (s.isLastSeed() && this.isHouseEmpty() && this.getOwner() == s.getOwner()) {
 			
 			AbstractPit store = this.getOwner().getStore();

@@ -3,6 +3,7 @@ package mancala;
 import model.GameModel;
 import rules.CrazyRules;
 import rules.IGameRules;
+import rules.KalahRules;
 import utility.IO;
 import utility.MockIO;
 import view.ASCIIView;
@@ -19,7 +20,7 @@ public class Mancala {
 	
 	public void play(IO io) {
 
-		IGameRules rules = new CrazyRules();
+		IGameRules rules = new KalahRules();
 		GameModel model = new GameModel(rules);
 		
 		ASCIIView asciiView = new ASCIIView(model, io);

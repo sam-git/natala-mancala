@@ -11,9 +11,9 @@ public abstract class AbstractPit {
 		this.seedCount = startingSeeds;
 	}
 	
-	public abstract void deposit(SeedCollection s);
+	protected abstract void deposit(SeedCollection s);
 	
-	public Player getOwner() {
+	protected Player getOwner() {
 		return owner;
 	}
 	
@@ -31,7 +31,7 @@ public abstract class AbstractPit {
 		return s;
 	}
 	
-	public AbstractPit getNextPit() {
+	protected AbstractPit getNextPit() {
 		return nextPit;
 	}
 
@@ -39,7 +39,7 @@ public abstract class AbstractPit {
 		this.nextPit = nextPit;
 	}
 
-	public int getSeedCount() {
+	protected int getSeedCount() {
 		return seedCount;
 	}
 }
