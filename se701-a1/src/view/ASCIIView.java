@@ -1,7 +1,7 @@
 package view;
 
 import utility.IO;
-import board.AbstractBoard;
+import board._AbstractBoard;
 
 /**
  * Concrete class acting as a View and as Input for the Mancala game.
@@ -12,9 +12,9 @@ import board.AbstractBoard;
 public class ASCIIView extends AbstractView implements IMancalaInput{
 
 	private final IO io;
-	private final AbstractBoard board;
+	private final _AbstractBoard board;
 
-	public ASCIIView(AbstractBoard board, IO io) {
+	public ASCIIView(_AbstractBoard board, IO io) {
 		this.io = io;
 		this.board = board;
 		printBoard(); //ASCII views print board first

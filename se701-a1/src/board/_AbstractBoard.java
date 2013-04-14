@@ -2,15 +2,15 @@ package board;
 
 import java.util.Observer;
 
-public abstract class AbstractBoard {
+public abstract class _AbstractBoard {
 	
-	private final BoardModel model;
+	private final _BoardModel model;
 	
-	public AbstractBoard(BoardModel model) {
+	public _AbstractBoard(_BoardModel model) {
 		this.model = model;
 	}
 
-//*****************************************************
+//*****************************************************properties
 // Method just for subclasses
 //	
 	protected int getSeedCount(int player, int house) {

@@ -5,8 +5,8 @@ import utility.MockIO;
 import view.ASCIIView;
 import view.AbstractView;
 import view.IMancalaInput;
-import board.AbstractBoard;
-import board.KalahBoard;
+import board._AbstractBoard;
+import board._KalahBoard;
 
 /**
  * This class is the starting point for SOFTENG 701 Assignment 1.1 in 2013.
@@ -21,7 +21,7 @@ public class Mancala {
 		
 		//set up MVC components
 		//model
-		AbstractBoard board = new KalahBoard();
+		_AbstractBoard board = new _KalahBoard();
 		ASCIIView asciiView = new ASCIIView(board, io);
 		//view
 		AbstractView view = asciiView; //use asciiView as view.

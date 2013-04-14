@@ -1,5 +1,7 @@
 package board;
 
+import gameType.GameRules;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -14,21 +16,20 @@ import view.event_strategy.EventStrategyFactory;
  */
 public class GameModel extends Observable {
 	
+	private GameRules rules;
 	private int current_player;
 	private boolean isGameOver;
 	private Map<Integer, Player> intToPlayer;
 	
-
-	public GameModel(int housesPerPlayer, int startingSeedsPerHouse) {
-		House.startingSeedCount = startingSeedsPerHouse;
-		Player.setHousesCount(housesPerPlayer);
+	public GameModel(GameRules rules) {
+		this.rules = rules;
 		this.current_player = 1;
 		this.isGameOver = false;
 		this.intToPlayer = new HashMap<Integer, Player>();
 		
-		Player p1 = new Player("Player 1");
-		Player p2 = new Player("Player 2");
-		Player.join(p1,p2);
+		Player p1 = new Player(rules, rules.getPlayerOneName());
+		Player p2 = new Player(rules, rules.getPlayerTwoName());
+		Player.join(p1,p2, rules);
 		
 		this.intToPlayer.put(1, p1);
 		this.intToPlayer.put(2, p2);
@@ -68,6 +69,10 @@ public class GameModel extends Observable {
 	 */
 	public int getSeedCount(int player, int house) {
 		return intToPlayer.get(player).getSeedCount(house);
+	}
+	
+	public int getStoreSeedCount(int player) {
+		return intToPlayer.get(player).getStoreSeedCount();
 	}
 
 	/**

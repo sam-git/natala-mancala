@@ -10,7 +10,7 @@ import view.event_strategy.EventStrategyFactory;
  * The model for the Mancala game. Encapsulates all the game state and game logic.
  * Is Observable and notifies all observers of change in state by passing them Strategy objects.
  */
-public class BoardModel extends Observable {
+public class _BoardModel extends Observable {
 	public final int HOUSES_PER_PLAYER;
 	public final int ROWS_PER_PLAYER;
 	public final int STARTING_SEEDS_PER_PLAYER;
@@ -20,7 +20,7 @@ public class BoardModel extends Observable {
 	private boolean isGameOver;
 	
 
-	public BoardModel(int housesPerPlayer, int rowsPerPlayer, int startingSeedsPerPlayer) {
+	public _BoardModel(int housesPerPlayer, int rowsPerPlayer, int startingSeedsPerPlayer) {
 		this.HOUSES_PER_PLAYER = housesPerPlayer;
 		this.ROWS_PER_PLAYER = rowsPerPlayer;
 		this.STARTING_SEEDS_PER_PLAYER = startingSeedsPerPlayer;

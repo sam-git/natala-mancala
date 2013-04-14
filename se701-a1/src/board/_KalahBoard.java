@@ -1,9 +1,9 @@
 package board;
 
-public class KalahBoard extends AbstractBoard {
+public class _KalahBoard extends _AbstractBoard {
 
-	public KalahBoard () {
-		super(new BoardModelBuilder().
+	public _KalahBoard () {
+		super(new _BoardModelBuilder().
 				housesPerPlayer(6).
 				rowsPerPlayer(1).
 				startingSeedsPerHouse(4).

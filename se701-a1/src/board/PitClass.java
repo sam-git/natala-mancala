@@ -6,15 +6,11 @@ public abstract class PitClass {
 	private PitClass nextPit;
 	private Player owner;
 
-	public PitClass(Player owner) {
-		super();
+	public PitClass(Player owner, int startingSeeds) {
 		this.owner = owner;
+		this.seedCount = startingSeeds;
 	}
 	
-	protected void setStartingSeedCount(int seeds) {
-		this.seedCount = seeds;
-	}
-
 	protected PitClass getNextPit() {
 		return nextPit;
 	}
