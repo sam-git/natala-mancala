@@ -1,4 +1,4 @@
-package view;
+package view.model;
 
 import model.GameModel;
 import utility.IO;
@@ -9,34 +9,14 @@ import utility.IO;
  * @author Sam
  * 
  */
-public class ASCIIView extends AbstractView implements IMancalaInput{
+public class IOModelView extends AbstractModelView {
 
 	private final IO io;
-	private final GameModel model;
 
-	public ASCIIView(GameModel model, IO io) {
+	public IOModelView(GameModel model, IO io) {
+		super(model);
 		this.io = io;
-		this.model = model;
 		printBoard(); //ASCII views print board first
-	}
-	
-//*****************************************************
-// MancalaInput Functions
-//
-
-	/**
-	 * prompt the user to make a move, and returns an integer from 1 to 6 if the
-	 * user made a valid move, prompts the user again if the move was invalid, 
-	 * or returns MancalaView.cancelResult if the user pressed the quit key..
-	 */
-	@Override
-	public int promptPlayer() {
-		String prompt = model.getCurrentPlayerName()
-				+ "'s turn - Specify house number or 'q' to quit: ";
-		return io.readInteger(prompt, 
-				1, 
-				model.getHousesPerPlayer(), 
-				IMancalaInput.cancelResult, "q");
 	}
 	
 //*****************************************************
@@ -73,11 +53,9 @@ public class ASCIIView extends AbstractView implements IMancalaInput{
 	 * Print an ASCII representation of the current board to io.
 	 */
 	private void printBoard() {		
-		String[] lines = model.toStringArray();
-		for (int i = 0; i < lines.length; i++) {
-			io.println(lines[i]);
-		}
+		printStringArrayToIO(super.toStringArray());
 	}
+	
 
 	/**
 	 * Print the final board of the game once it is over. Included the text
@@ -92,16 +70,27 @@ public class ASCIIView extends AbstractView implements IMancalaInput{
 	 * Print the score and the winner at the end of a completed game
 	 */
 	private void printScores() {
-		int player1 = model.getScore(1);
-		int player2 = model.getScore(2);
-		io.println("	player 1:" + player1);
-		io.println("	player 2:" + player2);
+		String[] lines = new String[3];
+		
+		int player1 = super.getFinalScore(1);
+		int player2 = super.getFinalScore(2);
+		
+		lines[0] = ("	player 1:" + player1);
+		lines[1] = ("	player 2:" + player2);
+		
 		if (player1 > player2) {
-			io.println("Player 1 wins!");
+			lines[2] = ("Player 1 wins!");
 		} else if (player2 > player1) {
-			io.println("Player 2 wins!");
+			lines[2] = ("Player 2 wins!");
 		} else {
-			io.println("A tie!");
+			lines[2] = ("A tie!");
+		}	
+		printStringArrayToIO(lines);
+	}
+	
+	private void printStringArrayToIO(String[] str) {
+		for (int i = 0; i < str.length; i++) {
+			io.println(str[i]);
 		}
 	}
 }

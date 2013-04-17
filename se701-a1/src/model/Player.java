@@ -57,7 +57,7 @@ public class Player {
 		return seeds;
 	}
 	
-	public static void join(Player p1, Player p2, IGameRules rules) {
+	public static void join(Player p1, Player p2, int housesPerPlayer) {
 		p1.store.setNextPit(p2.intToHouse.get(1));
 		p2.store.setNextPit(p1.intToHouse.get(1));
 		
@@ -65,7 +65,7 @@ public class Player {
 		for (Map.Entry<Integer, House> entry : p1.intToHouse.entrySet()) {
 		    int p1HouseInt = entry.getKey();
 		    House p1House = entry.getValue();
-		    House p2House = p2.intToHouse.get(rules.getHousesPerPlayer() + 1 - p1HouseInt);
+		    House p2House = p2.intToHouse.get(housesPerPlayer + 1 - p1HouseInt);
 		    p1House.setOppositeHouse(p2House);
 		    p2House.setOppositeHouse(p1House);
 		}

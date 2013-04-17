@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 
+import model.event_strategy.EventStrategyFactory;
+
 import rules.IGameRules;
 
-import view.event_strategy.EventStrategyFactory;
 
 
 
@@ -17,10 +18,10 @@ import view.event_strategy.EventStrategyFactory;
  */
 public class GameModel extends Observable {
 	
+	private final int HOUSES_PER_PLAYER;
 	private int current_player;
 	private boolean isGameOver;
 	private Map<Integer, Player> intToPlayer;
-	private final IGameRules rules;
 	
 	public GameModel(IGameRules rules) {
 		this.current_player = rules.getStartingPlayer();
@@ -29,22 +30,14 @@ public class GameModel extends Observable {
 		
 		Player p1 = new Player(rules, rules.getPlayerOneName());
 		Player p2 = new Player(rules, rules.getPlayerTwoName());
-		Player.join(p1,p2, rules);
+		Player.join(p1,p2, rules.getHousesPerPlayer());
 		
 		this.intToPlayer.put(1, p1);
 		this.intToPlayer.put(2, p2);
 		
-		this.rules = rules;
+		this.HOUSES_PER_PLAYER = rules.getHousesPerPlayer();
 	}
 
-	public String[] toStringArray(){
-		return this.rules.toStringArray(this);
-	}
-	
-	//Don't like this method. accessing static rule through model. used by ASCIIView
-	public int getHousesPerPlayer(){
-		return this.rules.getHousesPerPlayer();
-	}
 	
 	/**
 	 * returns whether or not the game is over
@@ -81,11 +74,18 @@ public class GameModel extends Observable {
 	public int getStoreSeedCount(int player) {
 		return intToPlayer.get(player).getStoreSeedCount();
 	}
+	
+	public int getHousesPerPlayer() {
+		return  this.HOUSES_PER_PLAYER;
+	}
 
 	/**
 	 * returns the score of a player at the end of a game.
 	 */
-	public int getScore(int player) {
+	public int getFinalScore(int player) {
+		if (!isGameOver()) {
+			throw new RuntimeException("Can't get final score until game is over!");
+		}
 		return intToPlayer.get(player).getScore();
 	}
 
@@ -111,7 +111,7 @@ public class GameModel extends Observable {
 
 		// check for land on own store and if not switch player
 		if (!endedOnOwnStore) {
-			this.current_player = (this.current_player % 2) + 1;
+			this.current_player = (this.current_player % intToPlayer.size()) + 1;
 		}
 		
 		//notify observers of end of move or end of game
@@ -132,6 +132,8 @@ public class GameModel extends Observable {
 		notifyObservers(EventStrategyFactory.gameQuitStrategy());
 	}
 	
+	
+	
 //////////////////////////////
 
 	/**
@@ -142,6 +144,7 @@ public class GameModel extends Observable {
 		for (Player p : intToPlayer.values()) {
 			if (p.getTotalSeedsInHouses() == 0) {
 				answer = true;
+				break;
 			}
 		}
 		return answer;

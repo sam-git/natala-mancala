@@ -4,7 +4,6 @@ import model.GameModel;
 
 public interface IGameRules {
 	
-	public String[] toStringArray(GameModel m);
 	public int getHousesPerPlayer();
 	public int getStartingSeedsPerHouse();
 	public int getStartingSeedsPerStore();

@@ -14,8 +14,8 @@ public class House extends AbstractPit {
 			Store store = this.getOwner().getStore();
 			store.addSeedCollection(s);
 			
-			SeedCollection steal = this.getOppositeHouse().removeAllSeeds();
-			store.addSeedCollection(steal);
+			SeedCollection stolenSeeds = this.getOppositeHouse().removeAllSeeds();
+			store.addSeedCollection(stolenSeeds);
 		} else {
 			s.removeOneSeed();
 			this.addOneSeed();

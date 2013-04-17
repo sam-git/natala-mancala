@@ -1,12 +1,12 @@
-package view.event_strategy;
+package model.event_strategy;
 
-import view.AbstractView;
+import view.model.AbstractModelView;
 
 public class EventStrategyFactory {
 	
 	public static IEventStrategy houseEmptyStrategy() {
 		return new IEventStrategy() {
-			public void execute(AbstractView view) {
+			public void execute(AbstractModelView view) {
 				view.emptyHousePrompt();
 			}
 		};
@@ -14,7 +14,7 @@ public class EventStrategyFactory {
 
 	public static IEventStrategy gameEndedStrategy() {
 		return new IEventStrategy() {
-			public void execute(AbstractView view) {
+			public void execute(AbstractModelView view) {
 				view.gameEnded();
 			}
 		};
@@ -22,7 +22,7 @@ public class EventStrategyFactory {
 	
 	public static IEventStrategy moveEndedStrategy() {
 		return new IEventStrategy() {
-			public void execute(AbstractView view) {
+			public void execute(AbstractModelView view) {
 				view.moveEnded();
 			}
 		};
@@ -30,7 +30,7 @@ public class EventStrategyFactory {
 	
 	public static IEventStrategy gameQuitStrategy() {
 		return new IEventStrategy() {
-			public void execute(AbstractView view) {
+			public void execute(AbstractModelView view) {
 				view.gameQuit();
 			}
 		};

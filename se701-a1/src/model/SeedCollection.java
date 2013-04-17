@@ -22,9 +22,9 @@ public class SeedCollection {
 	}
 	
 	public int removeAllSeeds() {
-		int temp = this.seedCount;
+		int removedSeeds = this.seedCount;
 		this.seedCount = 0;
-		return temp;
+		return removedSeeds;
 	}
 	
 	public void removeOneSeed() {

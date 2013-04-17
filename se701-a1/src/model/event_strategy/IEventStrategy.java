@@ -1,7 +1,7 @@
 
-package view.event_strategy;
+package model.event_strategy;
 
-import view.AbstractView;
+import view.model.AbstractModelView;
 
 /**
  * Interface that is used by the Model to send concrete objects containing the method to be called in views
@@ -10,5 +10,5 @@ import view.AbstractView;
  *
  */
 public interface IEventStrategy {
-	public void execute(AbstractView view);
+	public void execute(AbstractModelView view);
 }
