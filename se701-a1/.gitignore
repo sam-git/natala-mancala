@@ -37,3 +37,6 @@ local.properties
 
 ##Added later (by eclipse)
 /bin
+
+#added by me on mac
+.DS_Store
