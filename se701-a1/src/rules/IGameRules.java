@@ -1,6 +1,5 @@
 package rules;
 
-import model.GameModel;
 
 public interface IGameRules {
 	

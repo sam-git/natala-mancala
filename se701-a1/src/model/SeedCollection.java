@@ -5,6 +5,9 @@ public class SeedCollection {
 	private Player owner;
 	
 	public SeedCollection(int seeds, Player owner) {
+		if (seeds < 0) {
+			throw new RuntimeException("Must be zero or more seeds to create a SeedCollection!");
+		}
 		this.seedCount = seeds;
 		this.owner = owner;
 	}

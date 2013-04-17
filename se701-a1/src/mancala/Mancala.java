@@ -21,8 +21,8 @@ public class Mancala {
 	
 	public void play(IO io) {
 
-//		IGameRules rules = new KalahRules();
-		IGameRules rules = new CrazyRules();
+		IGameRules rules = new KalahRules();
+		//IGameRules rules = new CrazyRules();
 		GameModel model = new GameModel(rules);
 		
 		IOModelView view = new IOModelView(model, io);
