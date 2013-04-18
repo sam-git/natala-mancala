@@ -17,12 +17,8 @@ public class IOModelView extends ASCIIModelView {
 		super(model);
 		this.io = io;
 	}
-	
-//*****************************************************
-// MancalaView Overridden Functions
-//
-	
-	//Manual Override to print to IO.
+
+	// Manual Override to print to IO.
 	public void println(String s) {
 		io.println(s);
 	}

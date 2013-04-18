@@ -6,7 +6,7 @@ import model.GameModel;
 //put text output in a new place together???
 //look at dependency injection of IO //have an output interface???
 
-public abstract class ASCIIModelView extends AbstractModelView {
+public class ASCIIModelView extends AbstractModelView {
 
 	private final GameModel m;
 	private final int HOUSES_PER_PLAYER;
