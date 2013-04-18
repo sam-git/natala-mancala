@@ -1,4 +1,4 @@
-package mancala;
+package view.input;
 
 /**
  * Interface that  must be implemented by any class acting as the input to the Mancala game.
@@ -12,13 +12,8 @@ public interface IMancalaInput {
 	/**
 	 * called by the controller to prompt the player for input.
 	 * should return MancalaInput.cancelResult if the player quits on their turn.
-	 * Otherwise should return an int 1 to 6 to represent the current players house choice.
+	 * Otherwise should return an int to represent the current players house choice.
 	 * @return
 	 */
-	int promptPlayer();
-	
-	/**
-	 * called by the controller if a player specified an empty house. 
-	 */
-	void emptyHousePrompt();
+	int promptPlayer(String name);
 }
