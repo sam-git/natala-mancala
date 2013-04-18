@@ -29,6 +29,9 @@ public class ASCIIModelView extends AbstractModelView {
 		System.out.println("ERROR");
 	}
 
+	//*****************************************************
+	// MancalaView Overridden Functions
+	//
 	@Override
 	public void emptyHousePrompt() {
 		println("House is empty. Move again.");
