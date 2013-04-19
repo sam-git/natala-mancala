@@ -12,10 +12,10 @@ public class EventStrategyFactory {
 		};
 	}
 
-	public static IEventStrategy gameEndedStrategy() {
+	public static IEventStrategy gameEndedStrategy(final int...playerScores) {
 		return new IEventStrategy() {
 			public void execute(AbstractModelView view) {
-				view.gameEnded();
+				view.gameEnded(playerScores);
 			}
 		};
 	}

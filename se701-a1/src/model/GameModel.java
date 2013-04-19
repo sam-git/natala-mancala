@@ -82,11 +82,15 @@ public class GameModel extends Observable {
 	/**
 	 * returns the score of a player at the end of a game.
 	 */
-	public int getFinalScore(int player) {
+	public int[] getFinalScores() {
 		if (!isGameOver()) {
 			throw new RuntimeException("Can't get final score until game is over!");
 		}
-		return intToPlayer.get(player).getScore();
+		int[] scores = new int[intToPlayer.size()];
+		for (Map.Entry<Integer, Player> entry : intToPlayer.entrySet()) {
+			scores[entry.getKey()-1] = entry.getValue().getScore();
+		}
+		return scores;
 	}
 
 	/**
@@ -117,7 +121,7 @@ public class GameModel extends Observable {
 		//notify observers of end of move or end of game
 		setChanged();
 		if (this.isGameOver = hasGameEnded()) {
-			notifyObservers(EventStrategyFactory.gameEndedStrategy());
+			notifyObservers(EventStrategyFactory.gameEndedStrategy(getFinalScores()));
 		} else {
 			notifyObservers(EventStrategyFactory.moveEndedStrategy());
 		}
@@ -133,8 +137,6 @@ public class GameModel extends Observable {
 	}
 	
 	
-	
-//////////////////////////////
 
 	/**
 	 * return true if the game over conditions are met

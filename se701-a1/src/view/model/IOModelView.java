@@ -15,7 +15,8 @@ public class IOModelView extends ASCIIModelView {
 
 	public IOModelView(GameModel model, IO io) {
 		super(model);
-		this.io = io;
+		this.io = io; //must come after super call.
+		this.printBoard(); //ASCII views print board at start of game. Fix this by injecting IO
 	}
 
 	// Manual Override to print to IO.
