@@ -1,15 +1,14 @@
 package model;
 
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Properties;
 
 import model.event_strategy.EventStrategyFactory;
-
-import rules.IGameRules;
-
-
 
 
 /**
@@ -18,24 +17,44 @@ import rules.IGameRules;
  */
 public class GameModel extends Observable {
 	
+	public static final String gamePropsFolder = "gameProperties/";
+	
 	private final int HOUSES_PER_PLAYER;
 	private int current_player;
 	private boolean isGameOver;
 	private Map<Integer, Player> intToPlayer;
+	private final Properties props = new Properties();
 	
-	public GameModel(IGameRules rules) {
-		this.current_player = rules.getStartingPlayer();
+	public GameModel(String gameRules) {
+		try {
+			loadRules(gameRules);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.current_player = Integer.valueOf(props.getProperty("startingPlayer"));// rules.getStartingPlayer();
 		this.isGameOver = false;
 		this.intToPlayer = new HashMap<Integer, Player>();
 		
-		Player p1 = new Player(rules, rules.getPlayerOneName());
-		Player p2 = new Player(rules, rules.getPlayerTwoName());
-		Player.join(p1,p2, rules.getHousesPerPlayer());
+		Player p1 = new Player(props, props.getProperty("playerOneName"));
+		Player p2 = new Player(props, props.getProperty("playerTwoName"));
+		Player.join(p1,p2);
 		
 		this.intToPlayer.put(1, p1);
 		this.intToPlayer.put(2, p2);
 		
-		this.HOUSES_PER_PLAYER = rules.getHousesPerPlayer();
+		this.HOUSES_PER_PLAYER = Integer.valueOf(props.getProperty("housesPerPlayer"));
+	}
+	
+	private void loadRules(String gameRules) throws IOException{
+		// create and load default properties
+		FileInputStream in = new FileInputStream(gamePropsFolder + "Default.properties");
+		props.load(in);
+		in.close();
+		// now load properties for this game
+		in = new FileInputStream(gamePropsFolder + gameRules);
+		props.load(in);
+		in.close();
 	}
 
 	
@@ -56,7 +75,7 @@ public class GameModel extends Observable {
 	 * @param house
 	 * @return
 	 */
-	public boolean isHouseEmpty(int house) {
+	private boolean isHouseEmpty(int house) {
 		return intToPlayer.get(current_player).getSeedCount(house) == 0;
 	}
 
@@ -76,7 +95,7 @@ public class GameModel extends Observable {
 	}
 	
 	public int getHousesPerPlayer() {
-		return  this.HOUSES_PER_PLAYER;
+		return this.HOUSES_PER_PLAYER;
 	}
 
 	/**

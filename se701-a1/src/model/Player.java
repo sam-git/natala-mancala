@@ -3,20 +3,19 @@ package model;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import rules.IGameRules;
+import java.util.Properties;
 
 public class Player {
 	private String name;
 	private Store store;
 	private Map<Integer, House> intToHouse;
 	
-	public Player(IGameRules rules, String name) {
+	public Player(Properties props, String name) {
 		this.name = name;
 		this.intToHouse = new HashMap<Integer, House>();
-		this.store = new Store(this, rules.getStartingSeedsPerStore());
+		this.store = new Store(this, Integer.valueOf(props.getProperty("startingSeedsPerStore")));
 		
-		this.createHouses(rules); //links all houses and store
+		this.createHouses(props); //links all houses and store
 	}
 	
 	public boolean move(int house) {
@@ -57,7 +56,9 @@ public class Player {
 		return seeds;
 	}
 	
-	public static void join(Player p1, Player p2, int housesPerPlayer) {
+	public static void join(Player p1, Player p2) {
+		int housesPerPlayer = p1.intToHouse.size();
+		
 		p1.store.setNextPit(p2.intToHouse.get(1));
 		p2.store.setNextPit(p1.intToHouse.get(1));
 		
@@ -77,9 +78,11 @@ public class Player {
 	
 ///////////////////////////////////////////////////////////////
 	
-	private void createHouses(IGameRules rules){		
-		House.Builder hb = new House.Builder(this, rules.getStartingSeedsPerHouse());
-		for (int i = 0; i < rules.getHousesPerPlayer(); i++) {
+	private void createHouses(Properties props){
+		int startingSeedsPerHouse = Integer.valueOf(props.getProperty("startingSeedsPerHouse"));
+		int housesPerPlayer = Integer.valueOf(props.getProperty("housesPerPlayer"));
+		House.Builder hb = new House.Builder(this, startingSeedsPerHouse);
+		for (int i = 0; i < housesPerPlayer; i++) {
 			intToHouse.put(intToHouse.size()+1, hb.buildHouse());
 		}
 		//join last pit to store

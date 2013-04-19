@@ -12,10 +12,6 @@ public class SeedCollection {
 		this.owner = owner;
 	}
 	
-	public int getSeedCount() {
-		return seedCount;
-	}
-	
 	public boolean isLastSeed() {
 		return seedCount == 1;
 	}

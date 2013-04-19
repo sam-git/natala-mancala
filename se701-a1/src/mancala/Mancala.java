@@ -1,9 +1,6 @@
 package mancala;
 
 import model.GameModel;
-import rules.CrazyRules;
-import rules.IGameRules;
-import rules.KalahRules;
 import utility.IO;
 import utility.MockIO;
 import view.input.IMancalaInput;
@@ -15,20 +12,23 @@ import view.model.IOModelView;
  * This class acts as a controller in the MVC design pattern applied to the game.
  */
 public class Mancala {
+	
+	private static String gameProperties = "Default.properties"; //global variable to not break test Cases
+	
 	public static void main(String[] args) {
+		if (args.length < 1)
+			gameProperties = args[0];
 		new Mancala().play(new MockIO());
 	}
 	
 	public void play(IO io) {
 
-		IGameRules rules = new KalahRules(); //make rules a properties file
-//		IGameRules rules = new CrazyRules();
-		GameModel model = new GameModel(rules);
+		GameModel model = new GameModel(gameProperties);
 		
 		IOModelView view = new IOModelView(model, io);
 		model.addObserver(view); //the view observes the model
 		
-		IMancalaInput input = new IOInput(io, rules.getHousesPerPlayer()); //use ASCIIView as input source
+		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer()); //use ASCIIView as input source
 		
 		//game loop
 		int house;
