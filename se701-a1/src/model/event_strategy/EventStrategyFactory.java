@@ -1,5 +1,7 @@
 package model.event_strategy;
 
+import java.util.Map;
+
 import view.model.AbstractModelView;
 
 public class EventStrategyFactory {
@@ -12,10 +14,10 @@ public class EventStrategyFactory {
 		};
 	}
 
-	public static IEventStrategy gameEndedStrategy(final int...playerScores) {
+	public static IEventStrategy gameEndedStrategy(final Map<Integer, Integer>playerToScore) {
 		return new IEventStrategy() {
 			public void execute(AbstractModelView view) {
-				view.gameEnded(playerScores);
+				view.gameEnded(playerToScore);
 			}
 		};
 	}
@@ -28,10 +30,10 @@ public class EventStrategyFactory {
 		};
 	}
 	
-	public static IEventStrategy gameQuitStrategy() {
+	public static IEventStrategy gameQuitStrategy(final int player) {
 		return new IEventStrategy() {
 			public void execute(AbstractModelView view) {
-				view.gameQuit();
+				view.gameQuit(player);
 			}
 		};
 	}

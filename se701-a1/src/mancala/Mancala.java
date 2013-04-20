@@ -13,10 +13,10 @@ import view.model.IOModelView;
  */
 public class Mancala {
 	
-	private static String gameProperties = "Default.properties"; //global variable to not break test Cases
+	private static String gameProperties = "Kalah.properties"; //global variable to not break test Cases
 	
 	public static void main(String[] args) {
-		if (args.length < 1)
+		if (args.length > 0)
 			gameProperties = args[0];
 		new Mancala().play(new MockIO());
 	}
@@ -34,8 +34,8 @@ public class Mancala {
 		int house;
 		while (!model.isGameOver())  {
 			//get player input and check if they cancelled game.
-			if ((house = input.promptPlayer(model.getCurrentPlayerName())) 
-					== IMancalaInput.cancelResult) {
+			house = input.promptPlayer(model.getCurrentPlayerName());
+			if (house == IMancalaInput.cancelResult) {
 				model.quit(); //notifies all observers game was quit
 			} else {
 				model.move(house); //changes game state. notifies all observers

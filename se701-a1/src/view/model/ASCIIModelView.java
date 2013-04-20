@@ -1,5 +1,9 @@
 package view.model;
 
+import java.util.Map;
+import java.util.Properties;
+
+import mancala.PropsLoader;
 import model.GameModel;
 
 //put text output in a new place together???
@@ -7,18 +11,28 @@ import model.GameModel;
 
 public class ASCIIModelView extends AbstractModelView {
 
+	public static final String asciiPropsFolder = "asciiProperties/";
+	public static final String customPropsFile = "Custom.properties";
+
+	private final Properties props;
 	private final ASCIIBoardPrinter board;
+	private final String defaultHouseEmptyPrompt = "House is empty. Move again.";
+	private final String defaultGameOver = "Game over";
+	private final String defaultScoreformat = "	player %d:%s";
+	private final String defaultWinnerformat = "Player %d wins!";
 
 	public ASCIIModelView(GameModel model) {
-		this.board = new ASCIIBoardPrinter(model);
+		String customPropsLoc = asciiPropsFolder + customPropsFile;
+		this.props = PropsLoader.loadPropsFile(customPropsLoc);
+		this.board = new ASCIIBoardPrinter(model, props);
 	}
 
 	public void println(String s) {
-		System.out.println("ERROR");
+		System.out.println(s);
 	}
 	
 	/**
-	 * Print an ASCII representation of the current board to io.
+	 * Print an ASCII representation of the current board.
 	 */
 	public void printBoard() {
 		printStringArray(board.toStringArray());
@@ -29,19 +43,19 @@ public class ASCIIModelView extends AbstractModelView {
 	//
 	@Override
 	public void emptyHousePrompt() {
-		println("House is empty. Move again.");
+		println(props.getProperty("houseEmptyPrompt", defaultHouseEmptyPrompt));
 		printBoard();
 	}
 
 	@Override
-	public void gameQuit() {
+	public void gameQuit(int quittingPlayer) {
 		printGameOverBoard();
 	}
 
 	@Override
-	public void gameEnded(int... scores) {
+	public void gameEnded(Map<Integer, Integer>playerToScore) {
 		printGameOverBoard();
-		printScores(scores);
+		printScores(playerToScore);
 	}
 
 	@Override
@@ -55,30 +69,34 @@ public class ASCIIModelView extends AbstractModelView {
 	 * "Game Over" before the board.
 	 */
 	private void printGameOverBoard() {
-		println("Game over");
+		println(props.getProperty("gameOver", defaultGameOver));
 		printBoard();
 	}
 
 	/**
 	 * Print the score and the winner at the end of a completed game
 	 */
-	private void printScores(int scores[]) {
-		String[] lines = new String[3];
-
-		int player1 = scores[0];
-		int player2 = scores[1];
-
-		lines[0] = ("	player 1:" + player1);
-		lines[1] = ("	player 2:" + player2);
-
-		if (player1 > player2) {
-			lines[2] = ("Player 1 wins!");
-		} else if (player2 > player1) {
-			lines[2] = ("Player 2 wins!");
-		} else {
-			lines[2] = ("A tie!");
+	private void printScores(Map<Integer, Integer>playerToScore) {
+		int highestScore = -1;
+		int winner = -1;
+		boolean tie = false;
+		for (int i = 1; i <= playerToScore.size(); i++) {
+			int score = playerToScore.get(i);
+			int player = i;
+			if (score > highestScore) {
+				winner = player;
+				highestScore = score;
+				tie = false;
+			} else if (score == highestScore) {
+				tie = true;
+			}
+			println(String.format(defaultScoreformat, player, score));
 		}
-		printStringArray(lines);
+		if (tie) {
+			println("A tie!");
+		} else {
+			println(String.format(defaultWinnerformat, winner));
+		}
 	}
 
 	private void printStringArray(String[] str) {
