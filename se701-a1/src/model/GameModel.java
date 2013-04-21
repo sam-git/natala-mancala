@@ -21,6 +21,7 @@ public class GameModel extends Observable {
 
 	private Map<Integer, Player> intToPlayer;
 	private final int HOUSES_PER_PLAYER;
+	private final boolean PLAY_CLOCKWISE;
 	
 	private final Stack<GameMemento> mementosForUndo;
 	private final Stack<Integer> intsForRedo;
@@ -29,10 +30,12 @@ public class GameModel extends Observable {
 	private int current_player;
 	private boolean isGameOver;
 
+
 	public GameModel(String gameRules) {
 		Properties props = createProperties(gameRules);
 		
 		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
+		this.PLAY_CLOCKWISE = PropsLoader.getBool(props, "playClockwise");
 		this.current_player = PropsLoader.getInt(props, "startingPlayer");
 		this.isGameOver = false;
 		
@@ -59,6 +62,7 @@ public class GameModel extends Observable {
 		props.setProperty("startingSeedsPerStore", "0");
 		props.setProperty("startingPlayer", "1");
 		props.setProperty("numberOfPlayers", "2");
+		props.setProperty("playClockwise", "false");
 		props.setProperty("1Name", "Player 1");
 		props.setProperty("2Name", "Player 2");
 		return props;
@@ -106,13 +110,13 @@ public class GameModel extends Observable {
 		if (!isHouseValidMove(house)) {
 			return;
 		}
-		
-		saveUndoMemento(house);
+		intsForRedo.clear(); //clear redos
 		acceptableMove(house);
 	}
 
 	private void acceptableMove(int house) {
 		setChanged();
+		saveUndoMemento(house);
 		boolean moveEndedOnOwnStore = intToPlayer.get(current_player).move(
 				house);
 	
@@ -133,7 +137,6 @@ public class GameModel extends Observable {
 		GameMemento memento = this.saveToMemento();
 		memento.setNextMove(house);
 		mementosForUndo.add(memento);
-		intsForRedo.clear(); //clear redos
 	}
 
 	private boolean isHouseValidMove(int house) {
@@ -222,6 +225,10 @@ public class GameModel extends Observable {
 		return this.HOUSES_PER_PLAYER;
 	}
 
+	public boolean isPlayClockwise() {
+		return this.PLAY_CLOCKWISE;
+	}
+
 	/**
 	 * notify observers that the game was quit before ending
 	 */
@@ -257,7 +264,7 @@ public class GameModel extends Observable {
 			createPlayer(playerNumber, houses, storeSeeds, name);
 		}
 
-		Player.joinPlayers(intToPlayer.values());	
+		Player.joinPlayers(intToPlayer.values());
 	}
 	
 	public GameMemento saveToMemento() {

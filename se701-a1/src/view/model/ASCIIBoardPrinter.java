@@ -8,21 +8,24 @@ public class ASCIIBoardPrinter {
 
 	private final GameModel m;
 	private final int HOUSES_PER_PLAYER;
+	private final boolean PLAY_CLOCKWISE;
 
 	private String boardTopAndBottom;
 	private String boardMiddle;
 	private String HOUSE_FORMAT;
-	private String P2STORE_NAME_FORMAT;
-	private String P1STORE_NAME_FORMAT;
-	private String P1STORE_FORMAT;
-	private String P2STORE_FORMAT;	
 	private String V_FENCE;
 	private String H_FENCE ;
 	private String CNR_FENCE;
+	private String LEFT_NAME;
+	private String RIGHT_NAME;
+	private String LEFT_STORE_FORMAT;
+	private String RIGHT_STORE_FORMAT;
 
 	public ASCIIBoardPrinter(GameModel m, Properties props) {
 		this.m = m;		
 		this.HOUSES_PER_PLAYER = m.getHousesPerPlayer();
+		this.PLAY_CLOCKWISE = m.isPlayClockwise();
+		
 		this.setConstants(props);
 		this.prepareBoard();
 	}
@@ -30,16 +33,35 @@ public class ASCIIBoardPrinter {
 	public String[] toStringArray() {
 		String[] lines = new String[5];
 		lines[0] = this.boardTopAndBottom;
-		lines[1] = getPlayerTwoSide();
 		lines[2] = this.boardMiddle;
-		lines[3] = getPlayerOneSide();
 		lines[4] = this.boardTopAndBottom;
+ 		int houseOwner, storeOwner; 
+		if (PLAY_CLOCKWISE) {
+			houseOwner = 2;
+			storeOwner = 1;
+			lines[1] = getLeftToRight(houseOwner, storeOwner);
+			houseOwner = 1;
+			storeOwner = 2;
+			lines[3] = getRightToLeft(houseOwner, storeOwner);
+		} else {
+			houseOwner = 2;
+			storeOwner = 1;
+			lines[1] = getRightToLeft(houseOwner, storeOwner);
+			houseOwner = 1;
+			storeOwner = 2;
+			lines[3] = getLeftToRight(houseOwner, storeOwner);			
+		}
 		return lines;
 	}
 
 	public void setConstants(Properties props) {
-		this.P1STORE_NAME_FORMAT = String.format(" %s ", props.getProperty("1ShortName"));
-		this.P2STORE_NAME_FORMAT = String.format(" %s ", props.getProperty("2ShortName"));
+		if(PLAY_CLOCKWISE) {
+			this.LEFT_NAME = String.format(" %s ", props.getProperty("1ShortName"));
+			this.RIGHT_NAME = String.format(" %s ", props.getProperty("2ShortName"));
+		} else {
+			this.LEFT_NAME = String.format(" %s ", props.getProperty("2ShortName"));
+			this.RIGHT_NAME = String.format(" %s ", props.getProperty("1ShortName"));
+		}
 		this.V_FENCE = props.getProperty("vFence");
 		this.H_FENCE = props.getProperty("hFence");
 		this.CNR_FENCE = props.getProperty("cnrFence");
@@ -54,16 +76,16 @@ public class ASCIIBoardPrinter {
 	}
 
 	private void prepareStoreFormats() {
-		int p1NameLength = P1STORE_NAME_FORMAT.length();
-		P1STORE_FORMAT = " %" + (p1NameLength - 2) + "d ";
+		int leftNameLength = LEFT_NAME.length();
+		this.LEFT_STORE_FORMAT = " %" + (leftNameLength - 2) + "d ";
 
-		int p2NameLength = P2STORE_NAME_FORMAT.length();
-		P2STORE_FORMAT = " %" + (p2NameLength - 2) + "d ";
+		int rightNameLength = RIGHT_NAME.length();
+		this.RIGHT_STORE_FORMAT = " %" + (rightNameLength - 2) + "d ";
 	}
 
 	private void prepareTopAndBottom() {
 		StringBuffer sb = new StringBuffer(CNR_FENCE);
-		for (int i = 0; i < P2STORE_NAME_FORMAT.length(); i++) {
+		for (int i = 0; i < LEFT_NAME.length(); i++) {
 			sb.append(H_FENCE);
 		}
 		for (int i = 0; i < HOUSES_PER_PLAYER; i++) {
@@ -74,7 +96,7 @@ public class ASCIIBoardPrinter {
 			}
 		}
 		sb.append(CNR_FENCE);
-		for (int i = 0; i < P1STORE_NAME_FORMAT.length(); i++) {
+		for (int i = 0; i < RIGHT_NAME.length(); i++) {
 			sb.append(H_FENCE);
 		}
 		sb.append(CNR_FENCE);
@@ -82,34 +104,34 @@ public class ASCIIBoardPrinter {
 	}
 
 	private void prepareMiddleLine() {
-		String leftGap = V_FENCE + P2STORE_NAME_FORMAT.replaceAll(".", " ") + V_FENCE;
-		String rightGap = V_FENCE + P1STORE_NAME_FORMAT.replaceAll(".", " ") + V_FENCE;
+		String leftGap = V_FENCE + LEFT_NAME.replaceAll(".", " ") + V_FENCE;
+		String rightGap = V_FENCE + RIGHT_NAME.replaceAll(".", " ") + V_FENCE;
 		boardMiddle = leftGap
 				+ boardTopAndBottom.subSequence(leftGap.length(),
 						boardTopAndBottom.length() - rightGap.length())
 				+ rightGap;
 	}
 
-	private String getPlayerTwoSide() {
-		StringBuffer sb = new StringBuffer(V_FENCE + P2STORE_NAME_FORMAT + V_FENCE);
+	private String getRightToLeft(int player, int storeOwner) {
+		StringBuffer sb = new StringBuffer(V_FENCE + LEFT_NAME + V_FENCE);
 		for (int i = HOUSES_PER_PLAYER; i > 0; i--) {
-			sb.append(String.format(HOUSE_FORMAT, i, m.getSeedCount(2, i)));
+			sb.append(String.format(HOUSE_FORMAT, i, m.getSeedCount(player, i)));
 			sb.append(V_FENCE);
 		}
-		sb.append(String.format(P1STORE_FORMAT, m.getStoreSeedCount(1)));
+		sb.append(String.format(RIGHT_STORE_FORMAT, m.getStoreSeedCount(storeOwner)));
 		sb.append(V_FENCE);
 		return sb.toString();
 	}
 
-	private String getPlayerOneSide() {
+	private String getLeftToRight(int player, int storeOwner) {
 		StringBuffer sb = new StringBuffer(V_FENCE);
-		sb.append(String.format(P2STORE_FORMAT, m.getStoreSeedCount(2)));
+		sb.append(String.format(LEFT_STORE_FORMAT, m.getStoreSeedCount(storeOwner)));
 		sb.append(V_FENCE);
 		for (int i = 1; i <= HOUSES_PER_PLAYER; i++) {
-			sb.append(String.format(HOUSE_FORMAT, i, m.getSeedCount(1, i)));
+			sb.append(String.format(HOUSE_FORMAT, i, m.getSeedCount(player, i)));
 			sb.append(V_FENCE);
 		}
-		sb.append(P1STORE_NAME_FORMAT + V_FENCE);
+		sb.append(RIGHT_NAME + V_FENCE);
 		return sb.toString();
 	}
 }

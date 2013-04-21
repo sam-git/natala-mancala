@@ -34,8 +34,8 @@ public class Mancala {
 		
 		model.addObserver(view);
 		
-//		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
-		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
+		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
+//		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
 		
 		Stack<GameModel.GameMemento> savedStates = new Stack<GameModel.GameMemento>();
 		

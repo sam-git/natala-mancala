@@ -1,5 +1,6 @@
 #Kalah Rules
 
+playClockwise = false;
 startingSeedsPerHouse = 4
 housesPerPlayer = 6
 startingSeedsPerStore= 0
