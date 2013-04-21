@@ -35,8 +35,8 @@ public class Mancala {
 		
 		model.addObserver(view);
 		
-//		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
-		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
+		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
+//		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
 		
 		Stack<GameModel.GameMemento> savedStates = new Stack<GameModel.GameMemento>();
 		
@@ -52,7 +52,7 @@ public class Mancala {
 		if (args.length > 0) {
 			for (String arg : args) {
 				if (arg.contains(gamePropertiesExtension) && gameProperties  == null) {
-					gameProperties = arg;
+					gameProperties = arg; //arg is a gameProperty, so don't need to check again.
 					continue;
 				}
 				if (arg.contains(asciiPropertiesExtension) && boardProperties == null) {
