@@ -23,7 +23,7 @@ public class ASCIIBoardPrinter {
 	public ASCIIBoardPrinter(GameModel m, Properties props) {
 		this.m = m;		
 		this.HOUSES_PER_PLAYER = m.getHousesPerPlayer();
-		this.setConstants(m, props);
+		this.setConstants(props);
 		this.prepareBoard();
 	}
 
@@ -37,13 +37,14 @@ public class ASCIIBoardPrinter {
 		return lines;
 	}
 
-	private void setConstants(GameModel m, Properties props) {
-		this.P1STORE_NAME = String.format(" %s ", m.getPlayerShortName(1));
-		this.P2STORE_NAME = String.format(" %s ", m.getPlayerShortName(2));
-		this.V_FENCE = props.getProperty("hFence", "|");
-		this.H_FENCE = props.getProperty("vFence", "-");
-		this.CNR_FENCE = props.getProperty("cnrFence", "+");
-		this.HOUSE_FORMAT = props.getProperty("houseFormat", "%2d[%2d] ");
+	public void setConstants(Properties props) {
+		this.P1STORE_NAME = String.format(" %s ", this.m.getPlayerShortName(1));
+		this.P2STORE_NAME = String.format(" %s ", this.m.getPlayerShortName(2));
+		this.V_FENCE = props.getProperty("vFence");
+		this.H_FENCE = props.getProperty("hFence");
+		this.CNR_FENCE = props.getProperty("cnrFence");
+		this.HOUSE_FORMAT = props.getProperty("houseFormat");
+		this.prepareBoard();
 	}
 
 	private void prepareBoard() {

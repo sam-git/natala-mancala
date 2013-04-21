@@ -15,39 +15,64 @@ import model.event_strategy.EventStrategyFactory;
  */
 public class GameModel extends Observable {
 
-	private final Properties props;
 	public static final String gamePropsFolder = "gameProperties/";
-	public static final String defaultPropsFile = "Default.properties";
 
+	private final Map<Integer, Player> intToPlayer;
 	private final int HOUSES_PER_PLAYER;
+
+
 	private int current_player;
 	private boolean isGameOver;
-	private Map<Integer, Player> intToPlayer;
 
 	public GameModel(String gameRules) {
-		this.props = loadRules(gameRules);
+		Properties props = createProperties(gameRules);
+		
 		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
-
 		this.current_player = PropsLoader.getInt(props, "startingPlayer");
 		this.isGameOver = false;
 		
 		int numberOfPlayers = PropsLoader.getInt(props, "numberOfPlayers");
 		this.intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);
+		createPlayers(props, numberOfPlayers);
+
 		
+	}
+
+	private Properties createProperties(String gameRules) {
+		Properties props = createDefaultProperties();	
+		if (gameRules != null) {
+			String customPropsLoc = gamePropsFolder + gameRules;
+			PropsLoader.insertCustomProps(props, customPropsLoc);
+		}
+		return props;
+	}
+
+	private Properties createDefaultProperties() {
+		Properties props = new Properties();
+		props.setProperty("startingSeedsPerHouse", "4");
+		props.setProperty("housesPerPlayer", "6");
+		props.setProperty("startingSeedsPerStore", "0");
+		props.setProperty("startingPlayer", "1");
+		props.setProperty("numberOfPlayers", "2");
+		props.setProperty("1Name", "Player 1");
+		props.setProperty("1ShortName", "P1");
+		props.setProperty("2Name", "Player 2");
+		props.setProperty("2ShortName", "P2");
+		return props;
+	}
+	
+	private void createPlayers(Properties props, int numberOfPlayers) {		
 		for (int i = 1; i <= numberOfPlayers; i++) {
 			Player player = new Player(props, i);
 			this.intToPlayer.put(i, player);
 		}
-
+	
 		Player.joinPlayers(intToPlayer.values());
-
 	}
 
-	private static Properties loadRules(String gameRulesFile) {
-		String defaultPropsLoc = gamePropsFolder + defaultPropsFile;
-		String gamePropsLoc = gamePropsFolder + gameRulesFile;
-		Properties props = PropsLoader.loadProps(defaultPropsLoc, gamePropsLoc);
-		return props;
+	public void startGame() {
+		setChanged();
+		notifyObservers(EventStrategyFactory.gameStartStrategy());
 	}
 
 	/**
@@ -60,13 +85,16 @@ public class GameModel extends Observable {
 	public void move(int house) {
 		assert (!this.isGameOver);
 		setChanged();
-	
-		if (isHouseEmpty(house)) {
+		
+		if (isHouseOutOfRange(house)) {
+			notifyObservers(EventStrategyFactory.invalidHouseStrategy(house));
+			return;
+		}
+		else if (isHouseEmpty(house)) {
 			notifyObservers(EventStrategyFactory.houseEmptyStrategy());
 			return;
 		}
 	
-		// make move
 		boolean moveEndedOnOwnStore = intToPlayer.get(current_player).move(
 				house);
 	
@@ -83,13 +111,10 @@ public class GameModel extends Observable {
 		}
 	}
 
-	/**
-	 * return true if one or more seeds are in the current players selected
-	 * house.
-	 * 
-	 * @param house
-	 * @return
-	 */
+	private boolean isHouseOutOfRange(int house) {
+		return (house < 1 || house > HOUSES_PER_PLAYER);
+	}
+
 	private boolean isHouseEmpty(int house) {
 		return intToPlayer.get(current_player).getSeedCount(house) == 0;
 	}

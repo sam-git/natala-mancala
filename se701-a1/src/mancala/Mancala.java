@@ -4,7 +4,7 @@ import model.GameModel;
 import utility.IO;
 import utility.MockIO;
 import view.input.IMancalaInput;
-import view.input.IOInput;
+import view.input.InputWithLoadSave;
 import view.model.IOModelView;
 
 /**
@@ -13,32 +13,58 @@ import view.model.IOModelView;
  */
 public class Mancala {
 	
-	private static String gameProperties = "Kalah.properties"; //global variable to not break test Cases
+	private static final String gamePropertiesExtension = ".rules";
+	private static final String asciiPropertiesExtension = ".ascii";
+	private static String gameProperties;
+	private static String boardProperties;
 	
 	public static void main(String[] args) {
-		if (args.length > 0)
-			gameProperties = args[0];
+		checkArgsForPropFiles(args);
 		new Mancala().play(new MockIO());
 	}
-	
+
 	public void play(IO io) {
 
 		GameModel model = new GameModel(gameProperties);
+		IOModelView view = new IOModelView(model, io);	
+		if (boardProperties != null) view.setProperties(boardProperties);
 		
-		IOModelView view = new IOModelView(model, io);
-		model.addObserver(view); //the view observes the model
+		model.addObserver(view);
 		
-		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer()); //use ASCIIView as input source
+//		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
+		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
 		
 		//game loop
-		int house;
+		model.startGame();
 		while (!model.isGameOver())  {
-			//get player input and check if they cancelled game.
-			house = input.promptPlayer(model.getCurrentPlayerName());
+			int house = input.promptPlayer(model.getCurrentPlayerName());
 			if (house == IMancalaInput.cancelResult) {
 				model.quit(); //notifies all observers game was quit
+			} else if (house == IMancalaInput.undoResult) {
+				System.out.println("pressed undo.");
+			} else if (house == IMancalaInput.saveResult) {
+				System.out.println("saving");
+				ModelSaver.save(model);
+			} else if (house == IMancalaInput.loadResult) {
+				model = ModelSaver.load();
+				model.addObserver(view);
+				model.startGame();
 			} else {
 				model.move(house); //changes game state. notifies all observers
+			}
+		}
+	}
+
+	private static void checkArgsForPropFiles(String[] args) {
+		if (args.length > 0) {
+			for (String arg : args) {
+				if (arg.contains(gamePropertiesExtension) && gameProperties  == null) {
+					gameProperties = arg;
+					continue;
+				}
+				if (arg.contains(asciiPropertiesExtension) && boardProperties == null) {
+					boardProperties = arg;
+				}
 			}
 		}
 	}

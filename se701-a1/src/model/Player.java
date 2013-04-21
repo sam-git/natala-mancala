@@ -9,7 +9,8 @@ import java.util.Properties;
 
 import mancala.PropsLoader;
 
-public class Player {
+public class Player  {
+	
 	private final String name;
 	private final String shortName;
 	private Store store;
@@ -64,10 +65,7 @@ public class Player {
 	}
 
 	public int getScore() {
-		int score = 0;
-		score += getTotalSeedsInHouses();
-		score += this.store.getSeedCount();
-		return score;
+		return getTotalSeedsInHouses() + this.store.getSeedCount();
 	}
 	
 	public int getTotalSeedsInHouses() {

@@ -1,0 +1,4 @@
+startingSeedsPerHouse = 1
+housesPerPlayer = 1
+startingPlayer = 1
+numberOfPlayers = 3

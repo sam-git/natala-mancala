@@ -1,6 +1,6 @@
 package model;
 
-public class House extends AbstractPit {
+public class House extends AbstractPit  {
 	
 	private House oppositeHouse;
 	

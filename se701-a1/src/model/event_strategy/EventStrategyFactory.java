@@ -6,6 +6,14 @@ import view.model.AbstractModelView;
 
 public class EventStrategyFactory {
 	
+	public static IEventStrategy gameStartStrategy() {
+		return new IEventStrategy() {
+			public void execute(AbstractModelView view) {
+				view.gameStarted();
+			}
+		};
+	}
+	
 	public static IEventStrategy houseEmptyStrategy() {
 		return new IEventStrategy() {
 			public void execute(AbstractModelView view) {
@@ -37,4 +45,13 @@ public class EventStrategyFactory {
 			}
 		};
 	}
+	
+	public static IEventStrategy invalidHouseStrategy(final int house) {
+		return new IEventStrategy() {
+			public void execute(AbstractModelView view) {
+				view.invalidHousePrompt(house);
+			}
+		};
+	}
+
 }

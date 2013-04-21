@@ -4,6 +4,10 @@ startingSeedsPerHouse = 4
 housesPerPlayer = 6
 startingSeedsPerStore= 0
 startingPlayer = 1
+numberOfPlayers = 2
 
-#1ShortName = Kalah1
-#2ShortName = Kal2
+1Name = Player 1
+1ShortName = P1
+
+2Name = Player 2
+2ShortName = P2

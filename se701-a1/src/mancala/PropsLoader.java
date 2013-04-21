@@ -23,54 +23,19 @@ public class PropsLoader {
 		return 0; //never gets called
 	}
 
-	public static Properties loadProps(String defaultFileLoc, String customFileLoc) {
-		Properties props = new Properties();
-		loadDefaultProps(props, defaultFileLoc);
-		insertCustomProps(props, customFileLoc, defaultFileLoc);
-		return props;
-	}
 	
-	public static Properties loadPropsFile(String propsFileLoc) {
-		Properties props = new Properties();
-		FileInputStream in;
-		try {
-			in = new FileInputStream(propsFileLoc);
-			loadPropsFromFile(props, in);
-		} catch (FileNotFoundException e) {
-			System.err.println(e.getLocalizedMessage());
-			System.err.println("Using default values");
-		}
-		return props;
-	}
-	
-//	public static Properties loadProps(String defaultFile) {
-//		Properties props = new Properties();
-//		loadDefaultProps(props, defaultFile);
-//		return props;
-//	}
-
-	private static void loadDefaultProps(Properties props, String filename) {
-		FileInputStream in;
-		try {
-			in = new FileInputStream(filename);
-			loadPropsFromFile(props, in);
-		} catch (FileNotFoundException e) {
-			System.err.println(e.getLocalizedMessage());
-			System.exit(0);
-		}
-	}
-
-	private static void insertCustomProps(Properties props, String customFile,
-			String defaultPropertiesName) {
+	public static void insertCustomProps(Properties props, String customFile) {
 		FileInputStream in;
 		try {
 			in = new FileInputStream(customFile);
 			loadPropsFromFile(props, in);
+			System.err.println("Loaded " + customFile + " successfully.");
 		} catch (FileNotFoundException e) {
 			System.err.println(e.getLocalizedMessage());
-			System.err.printf("Using %s\n", defaultPropertiesName);
+			System.err.printf("Using default properties.");
 		}
 	}
+
 
 	private static void loadPropsFromFile(Properties props, FileInputStream in) {
 		try {
