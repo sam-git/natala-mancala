@@ -5,33 +5,27 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
-
-import mancala.PropsLoader;
 
 public class Player  {
 	
-	private final String name;
-	private final String shortName;
+	private String name;
 	private Store store;
 	private Map<Integer, House> intToHouse;
 	
-	public Player(Properties props, int playerNumber) {
-		this.name = props.getProperty(playerNumber + "Name");
-		this.shortName = props.getProperty(playerNumber + "ShortName");
+	public Player(int[] houses, int storeSeedCount, String name) {
+		this.name = name;
 		this.intToHouse = new HashMap<Integer, House>();
-		this.store = new Store(this, PropsLoader.getInt(props, "startingSeedsPerStore"));
+		this.store = new Store(this, storeSeedCount);
 		
-		this.createHouses(props); //links all houses and store
+		this.createHouses(houses); //links all houses and store
 	}
 	
-	private void createHouses(Properties props){
-		int startingSeedsPerHouse = PropsLoader.getInt(props, "startingSeedsPerHouse");
-		int housesPerPlayer = PropsLoader.getInt(props, "housesPerPlayer");
+	private void createHouses(int[] houses){
+
 		
-		House.Builder hb = new House.Builder(this, startingSeedsPerHouse);
-		for (int i = 0; i < housesPerPlayer; i++) {
-			intToHouse.put(intToHouse.size()+1, hb.buildHouse());
+		House.Builder hb = new House.Builder(this);
+		for (int i = 0; i < houses.length; i++) {
+			intToHouse.put(intToHouse.size()+1, hb.buildHouse(houses[i]));
 		}
 		//join last pit to store
 		 intToHouse.get(intToHouse.size()).setNextPit(this.store);
@@ -58,10 +52,6 @@ public class Player  {
 	
 	public String getName() {
 		return name;
-	}
-
-	public String getShortName() {
-		return shortName;
 	}
 
 	public int getScore() {
@@ -120,4 +110,43 @@ public class Player  {
 	public Store getStore() {
 		return store;
 	}
+	
+	public PlayerMemento saveToMemento() {
+		int[] houses = new int[intToHouse.size()];
+		for (int i = 0; i < intToHouse.size(); i++) {
+			houses[i] = intToHouse.get(i+1).getSeedCount();
+		}
+		return new PlayerMemento(houses, this.store.getSeedCount(), this.name);
+	}
+	
+	public static class PlayerMemento {
+        private final int houses[];
+        private final int store;
+        private final String name;
+        private int number;
+ 
+        public PlayerMemento(int houses[], int storeSeedCount, String name) {
+            this.houses = houses;
+            this.store = storeSeedCount;
+			this.name = name;
+        }
+        
+        public void setPlayerNumber(int number) {
+        	this.number = number;
+        }
+ 
+        public int[] getHouses() {
+            return houses;
+        }
+        public int getStoreSeedCount(){
+        	return store;
+        }
+        public int getNumber(){
+        	return number;
+        }
+
+		public String getName() {
+			return name;
+		}
+    }
 }

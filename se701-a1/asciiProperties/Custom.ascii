@@ -8,3 +8,7 @@ houseFormat=%3d[%3d]
 houseEmptyPrompt = Empty!
 
 gameOver = Game over. Thank you for playing!
+
+
+1ShortName = Pl1
+2ShortName = Play2

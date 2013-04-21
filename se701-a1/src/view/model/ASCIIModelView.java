@@ -28,16 +28,20 @@ public class ASCIIModelView extends AbstractModelView {
 
 	private Properties createDefaultProperties() {
 		Properties props = new Properties();
+		props.setProperty("1ShortName", "P1");
+		props.setProperty("2ShortName", "P2");
 		props.setProperty("hFence", "-");
 		props.setProperty("vFence", "|");
 		props.setProperty("cnrFence", "+");
 		props.setProperty("houseFormat", "%2d[%2d] ");
+		
 		props.setProperty("houseEmptyPrompt", "House is empty. Move again.");
 		props.setProperty("invalidHouseFormat", "%d is not a valid house.");
 		props.setProperty("gameOver", "Game over");
 		props.setProperty("scoreFormat", "	player %d:%s");
 		props.setProperty("winnerFormat", "Player %d wins!");
 		props.setProperty("tie", "A tie!");
+		props.setProperty("undo", "Previous move undone.");
 		return props;
 	}
 
@@ -85,6 +89,12 @@ public class ASCIIModelView extends AbstractModelView {
 	@Override
 	public void invalidHousePrompt(int house) {
 		println(String.format(props.getProperty("invalidHouseFormat"), house));
+	}
+	
+	@Override
+	public void moveUndone() {
+		println(props.getProperty("undo"));
+		printBoard();
 	}
 
 	// *****************************************************

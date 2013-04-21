@@ -4,5 +4,4 @@ startingSeedsPerHouse = 8
 housesPerPlayer = 5
 startingPlayer = 2
 1Name = John
-1ShortName = Sam
 2Name = Alan

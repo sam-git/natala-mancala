@@ -42,16 +42,14 @@ public class House extends AbstractPit  {
 	
 	public static class Builder {
 		private final Player owner;
-		private final int startingSeedCount;
 		private House previousHouse;
 		
-		public Builder(Player owner, int startingSeedCount) {
+		public Builder(Player owner) {
 			this.owner = owner;
 			this.previousHouse = null;
-			this.startingSeedCount = startingSeedCount;
 		}
 		
-		public House buildHouse() {
+		public House buildHouse(int startingSeedCount) {
 			House house = new House(owner, startingSeedCount);
 			if (previousHouse != null) {
 				previousHouse.setNextPit(house);

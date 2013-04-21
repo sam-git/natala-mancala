@@ -53,5 +53,13 @@ public class EventStrategyFactory {
 			}
 		};
 	}
+	
+	public static IEventStrategy undoMoveStrategy() {
+		return new IEventStrategy() {
+			public void execute(AbstractModelView view) {
+				view.moveUndone();
+			}
+		};
+	}
 
 }

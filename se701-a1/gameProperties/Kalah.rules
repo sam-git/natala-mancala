@@ -7,7 +7,4 @@ startingPlayer = 1
 numberOfPlayers = 2
 
 1Name = Player 1
-1ShortName = P1
-
 2Name = Player 2
-2ShortName = P2

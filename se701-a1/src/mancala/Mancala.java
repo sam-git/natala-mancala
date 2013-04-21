@@ -1,9 +1,12 @@
 package mancala;
 
+import java.util.Stack;
+
 import model.GameModel;
 import utility.IO;
 import utility.MockIO;
 import view.input.IMancalaInput;
+import view.input.IOInput;
 import view.input.InputWithLoadSave;
 import view.model.IOModelView;
 
@@ -34,21 +37,25 @@ public class Mancala {
 //		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
 		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
 		
+		Stack<GameModel.GameMemento> savedStates = new Stack<GameModel.GameMemento>();
+		
 		//game loop
 		model.startGame();
 		while (!model.isGameOver())  {
 			int house = input.promptPlayer(model.getCurrentPlayerName());
 			if (house == IMancalaInput.cancelResult) {
 				model.quit(); //notifies all observers game was quit
+				
+				
 			} else if (house == IMancalaInput.undoResult) {
-				System.out.println("pressed undo.");
+				model.undo();
+			} else if (house == IMancalaInput.redoResult) {
+				model.redo();
 			} else if (house == IMancalaInput.saveResult) {
 				System.out.println("saving");
-				ModelSaver.save(model);
+				savedStates.add(model.saveToMemento());
 			} else if (house == IMancalaInput.loadResult) {
-				model = ModelSaver.load();
-				model.addObserver(view);
-				model.startGame();
+				model.restoreFromMemento(savedStates.pop());				
 			} else {
 				model.move(house); //changes game state. notifies all observers
 			}

@@ -12,8 +12,8 @@ public class ASCIIBoardPrinter {
 	private String boardTopAndBottom;
 	private String boardMiddle;
 	private String HOUSE_FORMAT;
-	private String P2STORE_NAME;
-	private String P1STORE_NAME;
+	private String P2STORE_NAME_FORMAT;
+	private String P1STORE_NAME_FORMAT;
 	private String P1STORE_FORMAT;
 	private String P2STORE_FORMAT;	
 	private String V_FENCE;
@@ -38,8 +38,8 @@ public class ASCIIBoardPrinter {
 	}
 
 	public void setConstants(Properties props) {
-		this.P1STORE_NAME = String.format(" %s ", this.m.getPlayerShortName(1));
-		this.P2STORE_NAME = String.format(" %s ", this.m.getPlayerShortName(2));
+		this.P1STORE_NAME_FORMAT = String.format(" %s ", props.getProperty("1ShortName"));
+		this.P2STORE_NAME_FORMAT = String.format(" %s ", props.getProperty("2ShortName"));
 		this.V_FENCE = props.getProperty("vFence");
 		this.H_FENCE = props.getProperty("hFence");
 		this.CNR_FENCE = props.getProperty("cnrFence");
@@ -54,16 +54,16 @@ public class ASCIIBoardPrinter {
 	}
 
 	private void prepareStoreFormats() {
-		int p1NameLength = P1STORE_NAME.length();
+		int p1NameLength = P1STORE_NAME_FORMAT.length();
 		P1STORE_FORMAT = " %" + (p1NameLength - 2) + "d ";
 
-		int p2NameLength = P2STORE_NAME.length();
+		int p2NameLength = P2STORE_NAME_FORMAT.length();
 		P2STORE_FORMAT = " %" + (p2NameLength - 2) + "d ";
 	}
 
 	private void prepareTopAndBottom() {
 		StringBuffer sb = new StringBuffer(CNR_FENCE);
-		for (int i = 0; i < P2STORE_NAME.length(); i++) {
+		for (int i = 0; i < P2STORE_NAME_FORMAT.length(); i++) {
 			sb.append(H_FENCE);
 		}
 		for (int i = 0; i < HOUSES_PER_PLAYER; i++) {
@@ -74,7 +74,7 @@ public class ASCIIBoardPrinter {
 			}
 		}
 		sb.append(CNR_FENCE);
-		for (int i = 0; i < P1STORE_NAME.length(); i++) {
+		for (int i = 0; i < P1STORE_NAME_FORMAT.length(); i++) {
 			sb.append(H_FENCE);
 		}
 		sb.append(CNR_FENCE);
@@ -82,8 +82,8 @@ public class ASCIIBoardPrinter {
 	}
 
 	private void prepareMiddleLine() {
-		String leftGap = V_FENCE + P2STORE_NAME.replaceAll(".", " ") + V_FENCE;
-		String rightGap = V_FENCE + P1STORE_NAME.replaceAll(".", " ") + V_FENCE;
+		String leftGap = V_FENCE + P2STORE_NAME_FORMAT.replaceAll(".", " ") + V_FENCE;
+		String rightGap = V_FENCE + P1STORE_NAME_FORMAT.replaceAll(".", " ") + V_FENCE;
 		boardMiddle = leftGap
 				+ boardTopAndBottom.subSequence(leftGap.length(),
 						boardTopAndBottom.length() - rightGap.length())
@@ -91,7 +91,7 @@ public class ASCIIBoardPrinter {
 	}
 
 	private String getPlayerTwoSide() {
-		StringBuffer sb = new StringBuffer(V_FENCE + P2STORE_NAME + V_FENCE);
+		StringBuffer sb = new StringBuffer(V_FENCE + P2STORE_NAME_FORMAT + V_FENCE);
 		for (int i = HOUSES_PER_PLAYER; i > 0; i--) {
 			sb.append(String.format(HOUSE_FORMAT, i, m.getSeedCount(2, i)));
 			sb.append(V_FENCE);
@@ -109,7 +109,7 @@ public class ASCIIBoardPrinter {
 			sb.append(String.format(HOUSE_FORMAT, i, m.getSeedCount(1, i)));
 			sb.append(V_FENCE);
 		}
-		sb.append(P1STORE_NAME + V_FENCE);
+		sb.append(P1STORE_NAME_FORMAT + V_FENCE);
 		return sb.toString();
 	}
 }
