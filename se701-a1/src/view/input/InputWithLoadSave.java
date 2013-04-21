@@ -2,6 +2,9 @@ package view.input;
 
 import java.util.Scanner;
 
+import view.input_strategy.IUserInputStrategy;
+import view.input_strategy.UserInputFactory;
+
 public class InputWithLoadSave implements IMancalaInput {
 
 	private static final String quit = "q";
@@ -23,38 +26,31 @@ public class InputWithLoadSave implements IMancalaInput {
 	 * or returns MancalaView.cancelResult if the user pressed the quit key..
 	 */
 	@Override
-	public int promptPlayer(String name) {
+	public IUserInputStrategy promptPlayer(String name) {
 		System.out.println(quit + " to quit, " + undo + " to undo, " + save + " to save, " + load + " to load.");
 		System.out.print(name + "'s turn - Specify house number: ");
-		int result;
 		
 		while (true) {
 			String input = scan.next();
 			if (input.equals(quit)) {
-				result = cancelResult;
-				break;
-			} else if (input.equals(load)) {	
-				result = loadResult;
-				break;
-			} else if (input.equals(save)) {	
-				result = saveResult;
-				break;
+				return UserInputFactory.quit();
+//			} else if (input.equals(load)) {	
+//				result = UserInputFactory.load();
+//			} else if (input.equals(save)) {	
+//				result = UserInputFactory.save();
 			} else if (input.equals(undo)) {	
-				result = undoResult;
-				break;
+				return  UserInputFactory.undo();
 			} else if (input.equals(redo)) {	
-				result = redoResult;
-				break;
+				return UserInputFactory.redo();
 			} else {
 				try {
-					result = Integer.valueOf(input);
-					break;
+					int house = Integer.valueOf(input);
+					return UserInputFactory.move(house);
 				} catch(NumberFormatException e) {
 					System.out.println("%%Message: `" + input + "' is not a valid response.");
 				}
 			}
 		}
-		return result;
 	}
 
 }

@@ -8,6 +8,7 @@ import utility.MockIO;
 import view.input.IMancalaInput;
 import view.input.IOInput;
 import view.input.InputWithLoadSave;
+import view.input_strategy.IUserInputStrategy;
 import view.model.IOModelView;
 
 /**
@@ -34,31 +35,16 @@ public class Mancala {
 		
 		model.addObserver(view);
 		
-		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
-//		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
+//		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
+		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
 		
 		Stack<GameModel.GameMemento> savedStates = new Stack<GameModel.GameMemento>();
 		
 		//game loop
 		model.startGame();
 		while (!model.isGameOver())  {
-			int house = input.promptPlayer(model.getCurrentPlayerName());
-			if (house == IMancalaInput.cancelResult) {
-				model.quit(); //notifies all observers game was quit
-				
-				
-			} else if (house == IMancalaInput.undoResult) {
-				model.undo();
-			} else if (house == IMancalaInput.redoResult) {
-				model.redo();
-			} else if (house == IMancalaInput.saveResult) {
-				System.out.println("saving");
-				savedStates.add(model.saveToMemento());
-			} else if (house == IMancalaInput.loadResult) {
-				model.restoreFromMemento(savedStates.pop());				
-			} else {
-				model.move(house); //changes game state. notifies all observers
-			}
+			IUserInputStrategy userInput = input.promptPlayer(model.getCurrentPlayerName());
+			userInput.execute(model);
 		}
 	}
 
