@@ -2,11 +2,11 @@ package view.model_view;
 
 import java.util.Properties;
 
-import model.GameModel;
+import model.Model;
 
 public class ASCIIBoardPrinter {
 
-	private final GameModel m;
+	private final Model m;
 	private final int HOUSES_PER_PLAYER;
 	private final boolean PLAY_CLOCKWISE;
 
@@ -21,7 +21,7 @@ public class ASCIIBoardPrinter {
 	private String LEFT_STORE_FORMAT;
 	private String RIGHT_STORE_FORMAT;
 
-	public ASCIIBoardPrinter(GameModel m, Properties props) {
+	public ASCIIBoardPrinter(Model m, Properties props) {
 		this.m = m;		
 		this.HOUSES_PER_PLAYER = m.getHousesPerPlayer();
 		this.PLAY_CLOCKWISE = m.isPlayClockwise();

@@ -1,12 +1,10 @@
 package model;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Properties;
 
 import mancala.PropsLoader;
-import model.abstractions.Player;
 import model.event_strategy.EventStrategyFactory;
 import model.event_strategy.IEventStrategy;
 
@@ -23,16 +21,16 @@ import model.event_strategy.IEventStrategy;
  * can have actions quit, undo, redo, move called on it by userInputStrategy objects
  * can save itself to a mementoObject for undo, save.
  */
-public class GameModel extends Observable {
+public class Model extends Observable {
 	
 	private final int HOUSES_PER_PLAYER;
 	private final boolean PLAY_CLOCKWISE;
 	private final Map<Integer, String> intToName;
-	private final ModelController controller;
+	private final ModelLogic gameLogic;
 
-	public GameModel(String gameRules) {
+	public Model(String gameRules) {
 		Properties props = ModelInitialiser.createProperties(gameRules);
-		this.controller = new ModelController(props);
+		this.gameLogic = new ModelLogic(props);
 		this.intToName = ModelInitialiser.createNameMap(props);
 
 		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
@@ -45,19 +43,19 @@ public class GameModel extends Observable {
 	 * @return
 	 */
 	public boolean isGameOver() {
-		return controller.isGameOver();
+		return gameLogic.isGameOver();
 	}
 
 	public String getCurrentPlayerName() {
-		return intToName.get(controller.getCurrentPlayer());
+		return intToName.get(gameLogic.getCurrentPlayer());
 	}
 	
 	public int getSeedCount(int player, int house) {
-		return controller.getSeedCount(player, house);
+		return gameLogic.getSeedCount(player, house);
 	}
 
 	public int getStoreSeedCount(int player) {
-		return controller.getStoreSeedCount(player);
+		return gameLogic.getStoreSeedCount(player);
 	}
 
 	public int getHousesPerPlayer() {
@@ -74,27 +72,36 @@ public class GameModel extends Observable {
 	}
 
 	public void move(int house) {
-		IEventStrategy strategy = controller.move(house);
+		IEventStrategy strategy;
+		if (isHouseOutOfRange(house)) {
+			strategy = (EventStrategyFactory.invalidHouseStrategy(house));
+		} else {
+			strategy = gameLogic.move(house);
+		}
 		setChanged();
 		notifyObservers(strategy);
+	}
+	
+	private boolean isHouseOutOfRange(int house) {
+		return (house < 1 || house > HOUSES_PER_PLAYER);
 	}
 
 	/**
 	 * notify observers that the game was quit before ending
 	 */
 	public void quit() {
-		controller.setGameOver();
+		gameLogic.setGameOver();
 		setChanged();
-		notifyObservers(EventStrategyFactory.gameQuitStrategy(controller.getCurrentPlayer()));
+		notifyObservers(EventStrategyFactory.gameQuitStrategy(gameLogic.getCurrentPlayer()));
 	}
 	
 	public void undo() {
-		controller.undo();
+		gameLogic.undo();
 		setChanged();
 		notifyObservers(EventStrategyFactory.undoMoveStrategy());
 	}
 	
 	public void redo() {
-		controller.redo();
+		gameLogic.redo();
 	}
 }

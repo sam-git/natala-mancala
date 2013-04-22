@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import model.GameModel;
+import model.Model;
 
 public class ModelSaver {
-	public static void save(GameModel m) {
+	public static void save(Model m) {
 		try {
 			FileOutputStream fileOut = new FileOutputStream("saveGame.ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -21,12 +21,12 @@ public class ModelSaver {
 		}
 	}
 
-	public static GameModel load() {
-		GameModel m = null;
+	public static Model load() {
+		Model m = null;
 		try {
 			FileInputStream fileIn = new FileInputStream("saveGame.ser");
 			ObjectInputStream in = new ObjectInputStream(fileIn);
-			m = (GameModel) in.readObject();
+			m = (Model) in.readObject();
 			in.close();
 			fileIn.close();
 		} catch (IOException i) {

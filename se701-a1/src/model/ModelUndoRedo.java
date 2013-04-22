@@ -16,7 +16,7 @@ public class ModelUndoRedo {
 		this.intsForRedo = new Stack<Integer>();
 	}
 	
-	public void saveState(int house, int currentPlayer, Map<Integer, Player> intToPlayer) {
+	public void saveStateForUndo(int house, int currentPlayer, Map<Integer, Player> intToPlayer) {
 		GameMemento memento = new GameMemento(currentPlayer, intToPlayer);
 		memento.setNextMove(house);
 		mementosForUndo.add(memento);
@@ -30,13 +30,13 @@ public class ModelUndoRedo {
 		return intsForRedo.pop();
 	}
 
-	public void undo(ModelController modelController) {
+	public void undo(ModelLogic modelController) {
 		GameMemento newState = mementosForUndo.pop();
 		restoreFromMemento(newState, modelController);
 		intsForRedo.add(newState.getNextMove());
 	}
 	
-	public void restoreFromMemento(GameMemento memento, ModelController modelController){
+	public void restoreFromMemento(GameMemento memento, ModelLogic model){
 		int currentPlayer = memento.currentPlayer;
 		
 		int numberOfPlayers = memento.getPlayers().length;
@@ -52,7 +52,7 @@ public class ModelUndoRedo {
 			intToPlayer.put(playerNumber, player);	
 		}
 		Player.joinPlayers(intToPlayer.values());
-		modelController.restore(currentPlayer, intToPlayer);
+		model.restore(currentPlayer, intToPlayer);
 	}
 	
 	public static class GameMemento {

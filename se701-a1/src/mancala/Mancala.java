@@ -1,6 +1,6 @@
 package mancala;
 
-import model.GameModel;
+import model.Model;
 import utility.IO;
 import utility.MockIO;
 import view.input.IMancalaInput;
@@ -27,14 +27,14 @@ public class Mancala {
 
 	public void play(IO io) {
 
-		GameModel model = new GameModel(gameProperties);
+		Model model = new Model(gameProperties);
 		IOModelView view = new IOModelView(model, io);	
 		if (boardProperties != null) view.setProperties(boardProperties);
 		
 		model.addObserver(view);
 		
-//		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
-		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
+		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
+//		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
 		
 		//game loop
 		model.startGame();

@@ -10,21 +10,19 @@ import model.event_strategy.CompositeEventStrategy;
 import model.event_strategy.EventStrategyFactory;
 import model.event_strategy.IEventStrategy;
 
-public class ModelController {
-	
-	private final int HOUSES_PER_PLAYER;
+public class ModelLogic {
 	private final ModelUndoRedo undoRedo;
 
 	private Map<Integer, Player> intToPlayer;
 	private int currentPlayer;
 	private boolean isGameOver;
 	
-	public ModelController(Properties props) {
-		this.isGameOver = false;
+	public ModelLogic(Properties props) {
 		this.undoRedo = new ModelUndoRedo();
+
+		this.isGameOver = false;
 		this.currentPlayer = PropsLoader.getInt(props, "startingPlayer");
-		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
-		intToPlayer = ModelInitialiser.createNewGame(props);
+		this.intToPlayer = ModelInitialiser.createNewGame(props);
 	}
 
 	/**
@@ -36,21 +34,16 @@ public class ModelController {
 	 */
 	public IEventStrategy move(int house) {
 		assert (!this.isGameOver());
-		
-		if (isHouseOutOfRange(house)) {
-			return EventStrategyFactory.invalidHouseStrategy(house);
-		}
-		else if (isHouseEmpty(house)) {
+		if (isHouseEmpty(house)) {
 			return EventStrategyFactory.houseEmptyStrategy();
 		}
 		undoRedo.clearRedos();
-		IEventStrategy event = acceptableMove(house);
-		return event;
+		return acceptableMove(house);
 	}
 
 	
 	private IEventStrategy acceptableMove(int house) {
-		undoRedo.saveState(house, currentPlayer, intToPlayer);
+		undoRedo.saveStateForUndo(house, currentPlayer, intToPlayer);
 		CompositeEventStrategy events = new CompositeEventStrategy();
 		
 		boolean moveEndedOnOwnStore = intToPlayer.get(currentPlayer).move(house);
@@ -58,16 +51,14 @@ public class ModelController {
 		if (!moveEndedOnOwnStore) {
 			switchPlayer();
 		}
-		events.add(EventStrategyFactory.moveEndedStrategy());
 
 		if (isGameOver = hasGameEnded()) {
 			events.add(EventStrategyFactory.gameEndedStrategy(getFinalScores()));
+		} else {
+			events.add(EventStrategyFactory.moveEndedStrategy());
 		}
-		return events;
-	}
 
-	private boolean isHouseOutOfRange(int house) {
-		return (house < 1 || house > HOUSES_PER_PLAYER);
+		return events;
 	}
 
 	private boolean isHouseEmpty(int house) {

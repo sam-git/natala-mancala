@@ -1,7 +1,7 @@
 package view.input_strategy;
 
-import model.GameModel;
+import model.Model;
 
 public interface IUserInputStrategy {
-	public void execute(GameModel m);
+	public void execute(Model m);
 }

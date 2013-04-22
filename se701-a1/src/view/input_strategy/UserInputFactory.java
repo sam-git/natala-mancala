@@ -1,33 +1,33 @@
 package view.input_strategy;
 
-import model.GameModel;
+import model.Model;
 
 public class UserInputFactory {
 	
 	public static IUserInputStrategy move(final int house) {
 		return new IUserInputStrategy() {
-			public void execute(GameModel m) {
+			public void execute(Model m) {
 				m.move(house);
 			}
 		};
 	}
 	public static IUserInputStrategy undo() {
 		return new IUserInputStrategy() {
-			public void execute(GameModel m) {
+			public void execute(Model m) {
 				m.undo();
 			}
 		};
 	}
 	public static IUserInputStrategy redo() {
 		return new IUserInputStrategy() {
-			public void execute(GameModel m) {
+			public void execute(Model m) {
 				m.redo();
 			}
 		};
 	}
 	public static IUserInputStrategy quit() {
 		return new IUserInputStrategy() {
-			public void execute(GameModel m) {
+			public void execute(Model m) {
 				m.quit();
 			}
 		};

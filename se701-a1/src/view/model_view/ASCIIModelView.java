@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import mancala.PropsLoader;
-import model.GameModel;
+import model.Model;
 
 //put text output in a new place together???
 //look at dependency injection of IO //have an output interface???
@@ -15,7 +15,7 @@ public class ASCIIModelView extends AbstractModelView {
 	private final ASCIIBoardPrinter board;
 	private final Properties props;
 
-	public ASCIIModelView(GameModel model) {
+	public ASCIIModelView(Model model) {
 		this.props = createDefaultProperties();
 		this.board = new ASCIIBoardPrinter(model, props);
 	}

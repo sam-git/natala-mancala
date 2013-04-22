@@ -1,6 +1,6 @@
 package view.model_view;
 
-import model.GameModel;
+import model.Model;
 import utility.IO;
 
 /**
@@ -13,7 +13,7 @@ public class IOModelView extends ASCIIModelView {
 
 	private final IO io;
 
-	public IOModelView(GameModel model, IO io) {
+	public IOModelView(Model model, IO io) {
 		super(model);
 		this.io = io; //must come after super call.
 	}
