@@ -1,5 +1,4 @@
-package model;
-
+package model.abstractions;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,15 +13,13 @@ public class Player  {
 	
 	public Player(int[] houses, int storeSeedCount, String name) {
 		this.name = name;
-		this.intToHouse = new HashMap<Integer, House>();
 		this.store = new Store(this, storeSeedCount);
 		
+		this.intToHouse = new HashMap<Integer, House>();
 		this.createHouses(houses); //links all houses and store
 	}
 	
 	private void createHouses(int[] houses){
-
-		
 		House.Builder hb = new House.Builder(this);
 		for (int i = 0; i < houses.length; i++) {
 			intToHouse.put(intToHouse.size()+1, hb.buildHouse(houses[i]));
@@ -80,12 +77,12 @@ public class Player  {
 		currentPlayer.store.setNextPit(firstPlayer.intToHouse.get(1));
 	}
 
-	private static void joinOppositeHouses(Player p1, Player p2) {
-		int housesPerPlayer = p1.intToHouse.size();
-		for (Map.Entry<Integer, House> entry : p1.intToHouse.entrySet()) {
+	private static void joinOppositeHouses(Player playerOnSide1, Player playerOnSide2) {
+		int housesPerPlayer = playerOnSide1.intToHouse.size();
+		for (Map.Entry<Integer, House> entry : playerOnSide1.intToHouse.entrySet()) {
 		    int p1HouseInt = entry.getKey();
 		    House p1House = entry.getValue();
-		    House p2House = p2.intToHouse.get(housesPerPlayer + 1 - p1HouseInt);
+		    House p2House = playerOnSide2.intToHouse.get(housesPerPlayer + 1 - p1HouseInt);
 		    p1House.setOppositeHouse(p2House);
 		    p2House.setOppositeHouse(p1House);
 		}

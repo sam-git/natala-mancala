@@ -1,4 +1,5 @@
-package model;
+package model.abstractions;
+
 
 public class SeedCollection {
 	private int seedCount;

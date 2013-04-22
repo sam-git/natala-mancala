@@ -2,7 +2,7 @@ package model.event_strategy;
 
 import java.util.Map;
 
-import view.model.AbstractModelView;
+import view.model_view.AbstractModelView;
 
 public class EventStrategyFactory {
 	

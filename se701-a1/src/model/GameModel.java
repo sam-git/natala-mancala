@@ -4,70 +4,49 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Properties;
-import java.util.Stack;
 
 import mancala.PropsLoader;
-import model.Player.PlayerMemento;
+import model.abstractions.Player;
 import model.event_strategy.EventStrategyFactory;
 
 /**
  * The model for the Mancala game. Encapsulates all the game state and game
  * logic. Is Observable and notifies all observers of change in state by passing
  * them Strategy objects.
+ * 
+ * Creates a new game by creating the player objects and giving them info about their pits
+ * Can be queried if game is over by controller
+ * can be queried by controller for current player name
+ * can be queried by views for seed counts of pits for players
+ * can be queried by views for housesPerPlayer and isPlayClockwise for view setup.
+ * can have actions quit, undo, redo, move called on it by userInputStrategy objects
+ * can save itself to a mementoObject for undo, save.
  */
 public class GameModel extends Observable {
-
-	public static final String gamePropsFolder = "gameProperties/";
-
-	private Map<Integer, Player> intToPlayer;
+	
 	private final int HOUSES_PER_PLAYER;
 	private final boolean PLAY_CLOCKWISE;
-	
-	private final Stack<GameMemento> mementosForUndo;
-	private final Stack<Integer> intsForRedo;
 
+	private final ModelUndoRedo undoRedo;
 
-	private int current_player;
+	Map<Integer, Player> intToPlayer;
+	int current_player;
 	private boolean isGameOver;
 
 
 	public GameModel(String gameRules) {
-		Properties props = createProperties(gameRules);
-		
+		Properties props = ModelProperties.createProperties(gameRules);		
+		this.undoRedo = new ModelUndoRedo(this);
+
 		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
 		this.PLAY_CLOCKWISE = PropsLoader.getBool(props, "playClockwise");
 		this.current_player = PropsLoader.getInt(props, "startingPlayer");
 		this.isGameOver = false;
 		
-		this.mementosForUndo = new Stack<GameMemento>();
-		this.intsForRedo = new Stack<Integer>();
-		
-		createNewGame(props);
-		
+		createNewGame(props);	
 	}
 
-	private Properties createProperties(String gameRules) {
-		Properties props = setDefaultProperties();	
-		if (gameRules != null) {
-			String customPropsLoc = gamePropsFolder + gameRules;
-			PropsLoader.insertCustomProps(props, customPropsLoc);
-		}
-		return props;
-	}
 
-	private Properties setDefaultProperties() {
-		Properties props = new Properties();
-		props.setProperty("startingSeedsPerHouse", "4");
-		props.setProperty("housesPerPlayer", "6");
-		props.setProperty("startingSeedsPerStore", "0");
-		props.setProperty("startingPlayer", "1");
-		props.setProperty("numberOfPlayers", "2");
-		props.setProperty("playClockwise", "false");
-		props.setProperty("1Name", "Player 1");
-		props.setProperty("2Name", "Player 2");
-		return props;
-	}
-	
 	private void createNewGame(Properties props) {
 		int numberOfPlayers = PropsLoader.getInt(props, "numberOfPlayers");
 		this.intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);
@@ -79,15 +58,15 @@ public class GameModel extends Observable {
 		for (int i = 0; i < houses.length; i++) {
 			houses[i] = startingSeedsPerHouse;
 		}
-		for (int i = 1; i <= numberOfPlayers; i++) {
-			String name = props.getProperty(i + "Name");
-			createPlayer(i, houses, storeSeeds, name);
+		for (int playerNumber = 1; playerNumber <= numberOfPlayers; playerNumber++) {
+			String name = props.getProperty(playerNumber + "Name");
+			createPlayer(playerNumber, houses, storeSeeds, name);
 		}
 		Player.joinPlayers(intToPlayer.values());
 		
 	}
 
-	private void createPlayer(int playerNumber, int[] houses, int storeSeeds, String name) {
+	void createPlayer(int playerNumber, int[] houses, int storeSeeds, String name) {
 		Player player = new Player(houses, storeSeeds, name);
 		this.intToPlayer.put(playerNumber, player);	
 	}
@@ -110,13 +89,13 @@ public class GameModel extends Observable {
 		if (!isHouseValidMove(house)) {
 			return;
 		}
-		intsForRedo.clear(); //clear redos
+		undoRedo.clearRedos();
 		acceptableMove(house);
 	}
 
-	private void acceptableMove(int house) {
-		setChanged();
-		saveUndoMemento(house);
+	void acceptableMove(int house) {
+		undoRedo.saveUndoMemento(house);
+		
 		boolean moveEndedOnOwnStore = intToPlayer.get(current_player).move(
 				house);
 	
@@ -125,18 +104,13 @@ public class GameModel extends Observable {
 		}
 		
 		// notify observers of end of move or end of game
+		setChanged();
 		if (this.isGameOver = hasGameEnded()) {
 			notifyObservers(EventStrategyFactory
 					.gameEndedStrategy(getFinalScores()));
 		} else {
 			notifyObservers(EventStrategyFactory.moveEndedStrategy());
 		}
-	}
-
-	private void saveUndoMemento(int house) {
-		GameMemento memento = this.saveToMemento();
-		memento.setNextMove(house);
-		mementosForUndo.add(memento);
 	}
 
 	private boolean isHouseValidMove(int house) {
@@ -239,68 +213,12 @@ public class GameModel extends Observable {
 	}
 	
 	public void undo() {
-		GameMemento newState = mementosForUndo.pop();
-		restoreFromMemento(newState);
-		intsForRedo.add(newState.getNextMove());
+		undoRedo.undo();
 		setChanged();
 		notifyObservers(EventStrategyFactory.undoMoveStrategy());
 	}
 	
 	public void redo() {
-		acceptableMove(intsForRedo.pop());
+		undoRedo.redo();
 	}
-	
-	public void restoreFromMemento(GameMemento memento){
-		this.current_player = memento.getCurrentPlayer();
-
-		int numberOfPlayers = memento.getPlayers().length;
-		this.intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);
-
-		for (PlayerMemento p : memento.getPlayers()) {
-			String name = p.getName();
-			int playerNumber = p.getNumber();
-			int houses[] = p.getHouses();
-			int storeSeeds = p.getStoreSeedCount();
-			createPlayer(playerNumber, houses, storeSeeds, name);
-		}
-
-		Player.joinPlayers(intToPlayer.values());
-	}
-	
-	public GameMemento saveToMemento() {
-		return new GameMemento(this.current_player, this.intToPlayer);
-	}
-	
-	public static class GameMemento {
-		private final int currentPlayer;
-		private PlayerMemento players[];
-		private int nextMove;
- 
-        public GameMemento(int currentPlayer, Map<Integer, Player> intToPlayer) {
-            this.currentPlayer = currentPlayer;
-            this.players = new PlayerMemento[intToPlayer.size()];
-            
-            for (Map.Entry<Integer, Player> entry : intToPlayer.entrySet()) {
-            	PlayerMemento playerMemento = entry.getValue().saveToMemento();
-            	playerMemento.setPlayerNumber(entry.getKey());
-            	players[entry.getKey() - 1] = playerMemento;
-    		}
-        }
- 
-        public PlayerMemento[] getPlayers() {
-            return players;
-        }
-
-		public int getCurrentPlayer() {
-			return currentPlayer;
-		}
-
-		public int getNextMove() {
-			return nextMove;
-		}
-
-		public void setNextMove(int nextMove) {
-			this.nextMove = nextMove;
-		}
-    }
 }

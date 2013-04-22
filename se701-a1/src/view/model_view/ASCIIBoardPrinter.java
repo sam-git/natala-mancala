@@ -1,4 +1,4 @@
-package view.model;
+package view.model_view;
 
 import java.util.Properties;
 

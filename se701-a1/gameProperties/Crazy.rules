@@ -2,7 +2,7 @@
 
 startingSeedsPerHouse = 8
 housesPerPlayer = 5
-startingPlayer = 2
+startingPlayer = 1
 playClockwise = true
 1Name = John(p1)
 2Name = Alan(p2)

@@ -3,13 +3,14 @@ package mancala;
 import java.util.Stack;
 
 import model.GameModel;
+import model.ModelUndoRedo;
 import utility.IO;
 import utility.MockIO;
 import view.input.IMancalaInput;
 import view.input.IOInput;
 import view.input.InputWithLoadSave;
 import view.input_strategy.IUserInputStrategy;
-import view.model.IOModelView;
+import view.model_view.IOModelView;
 
 /**
  * This class is the starting point for SOFTENG 701 Assignment 1.1 in 2013.
@@ -35,10 +36,10 @@ public class Mancala {
 		
 		model.addObserver(view);
 		
-		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
-//		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
+//		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
+		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
 		
-		Stack<GameModel.GameMemento> savedStates = new Stack<GameModel.GameMemento>();
+		Stack<ModelUndoRedo.GameMemento> savedStates = new Stack<ModelUndoRedo.GameMemento>(); //where to put this???
 		
 		//game loop
 		model.startGame();
@@ -52,7 +53,7 @@ public class Mancala {
 		if (args.length > 0) {
 			for (String arg : args) {
 				if (arg.contains(gamePropertiesExtension) && gameProperties  == null) {
-					gameProperties = arg; //arg is a gameProperty, so don't need to check again.
+					gameProperties = arg; //arg is a gameProperty, so don't need to check arg again.
 					continue;
 				}
 				if (arg.contains(asciiPropertiesExtension) && boardProperties == null) {
