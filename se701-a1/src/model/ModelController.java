@@ -7,11 +7,11 @@ import model.abstractions.Player;
 import model.event_strategy.EventStrategyFactory;
 import model.event_strategy.IEventStrategy;
 
-public class ModelMove {
+public class ModelController {
 	
 	private final GameModel model;
 	
-	public ModelMove(GameModel model) {
+	public ModelController(GameModel model) {
 		this.model = model;
 	}
 	

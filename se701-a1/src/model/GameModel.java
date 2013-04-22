@@ -29,7 +29,7 @@ public class GameModel extends Observable {
 	private final boolean PLAY_CLOCKWISE;
 
 	final ModelUndoRedo undoRedo;
-	final ModelMove mover;
+	final ModelController controller;
 
 	Map<Integer, Player> intToPlayer;
 	int current_player;
@@ -39,7 +39,7 @@ public class GameModel extends Observable {
 	public GameModel(String gameRules) {
 		Properties props = ModelProperties.createProperties(gameRules);		
 		this.undoRedo = new ModelUndoRedo(this);
-		this.mover = new ModelMove(this);
+		this.controller = new ModelController(this);
 
 		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
 		this.PLAY_CLOCKWISE = PropsLoader.getBool(props, "playClockwise");
@@ -117,7 +117,7 @@ public class GameModel extends Observable {
 
 
 	public void move(int house) {
-		IEventStrategy strategy = mover.move(house);
+		IEventStrategy strategy = controller.move(house);
 		setChanged();
 		notifyObservers(strategy);
 	}
@@ -139,6 +139,6 @@ public class GameModel extends Observable {
 	
 	public void redo() {
 		int house = undoRedo.redo();
-		mover.acceptableMove(house);
+		controller.acceptableMove(house);
 	}
 }
