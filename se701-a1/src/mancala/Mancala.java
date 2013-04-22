@@ -1,9 +1,6 @@
 package mancala;
 
-import java.util.Stack;
-
 import model.GameModel;
-import model.ModelUndoRedo;
 import utility.IO;
 import utility.MockIO;
 import view.input.IMancalaInput;
@@ -38,8 +35,6 @@ public class Mancala {
 		
 //		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
 		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
-		
-		Stack<ModelUndoRedo.GameMemento> savedStates = new Stack<ModelUndoRedo.GameMemento>(); //where to put this???
 		
 		//game loop
 		model.startGame();

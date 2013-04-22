@@ -2,19 +2,31 @@ package model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
+import mancala.PropsLoader;
 import model.abstractions.Player;
+import model.event_strategy.CompositeEventStrategy;
 import model.event_strategy.EventStrategyFactory;
 import model.event_strategy.IEventStrategy;
 
 public class ModelController {
 	
-	private final GameModel model;
+	private final int HOUSES_PER_PLAYER;
+	private final ModelUndoRedo undoRedo;
+
+	private Map<Integer, Player> intToPlayer;
+	private int currentPlayer;
+	private boolean isGameOver;
 	
-	public ModelController(GameModel model) {
-		this.model = model;
+	public ModelController(Properties props) {
+		this.isGameOver = false;
+		this.undoRedo = new ModelUndoRedo();
+		this.currentPlayer = PropsLoader.getInt(props, "startingPlayer");
+		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
+		intToPlayer = ModelInitialiser.createNewGame(props);
 	}
-	
+
 	/**
 	 * Makes a move for the current player. Updates houses and sets the current
 	 * player at the end of the move. Notifies Observers with an EventStrategy.
@@ -23,7 +35,7 @@ public class ModelController {
 	 * @return
 	 */
 	public IEventStrategy move(int house) {
-		assert (!model.isGameOver());
+		assert (!this.isGameOver());
 		
 		if (isHouseOutOfRange(house)) {
 			return EventStrategyFactory.invalidHouseStrategy(house);
@@ -31,41 +43,39 @@ public class ModelController {
 		else if (isHouseEmpty(house)) {
 			return EventStrategyFactory.houseEmptyStrategy();
 		}
-		
-		model.undoRedo.clearRedos();
-		
+		undoRedo.clearRedos();
 		IEventStrategy event = acceptableMove(house);
 		return event;
 	}
 
 	
-	IEventStrategy acceptableMove(int house) {
-		model.undoRedo.saveUndoMemento(house);
+	private IEventStrategy acceptableMove(int house) {
+		undoRedo.saveState(house, currentPlayer, intToPlayer);
+		CompositeEventStrategy events = new CompositeEventStrategy();
 		
-		boolean moveEndedOnOwnStore = model.intToPlayer.get(model.current_player).move(house);
+		boolean moveEndedOnOwnStore = intToPlayer.get(currentPlayer).move(house);
 	
 		if (!moveEndedOnOwnStore) {
 			switchPlayer();
 		}
+		events.add(EventStrategyFactory.moveEndedStrategy());
 
-		if (model.isGameOver = hasGameEnded()) {
-			return EventStrategyFactory.gameEndedStrategy(getFinalScores());
-		} else {
-			return EventStrategyFactory.moveEndedStrategy();
+		if (isGameOver = hasGameEnded()) {
+			events.add(EventStrategyFactory.gameEndedStrategy(getFinalScores()));
 		}
+		return events;
 	}
 
-
 	private boolean isHouseOutOfRange(int house) {
-		return (house < 1 || house > model.getHousesPerPlayer());
+		return (house < 1 || house > HOUSES_PER_PLAYER);
 	}
 
 	private boolean isHouseEmpty(int house) {
-		return model.intToPlayer.get(model.current_player).getSeedCount(house) == 0;
+		return intToPlayer.get(currentPlayer).getSeedCount(house) == 0;
 	}
 
 	private void switchPlayer() {
-		model.current_player = (model.current_player % model.intToPlayer.size()) + 1;
+		currentPlayer = (currentPlayer % intToPlayer.size()) + 1;
 	}
 
 	/**
@@ -73,7 +83,7 @@ public class ModelController {
 	 */
 	private boolean hasGameEnded() {
 		boolean answer = false;
-		for (Player p : model.intToPlayer.values()) {
+		for (Player p : intToPlayer.values()) {
 			if (p.getTotalSeedsInHouses() == 0) {
 				answer = true;
 				break;
@@ -86,13 +96,45 @@ public class ModelController {
 	 * returns the scores of all player at the end of a game.
 	 */
 	private Map<Integer, Integer> getFinalScores() {
-		assert (model.isGameOver());
-	
-		Map<Integer, Integer> playerToScore = new HashMap<Integer, Integer>(model.intToPlayer.size());
-		for (Map.Entry<Integer, Player> intAndPlayer : model.intToPlayer.entrySet()) {
+		assert (this.isGameOver());
+		Map<Integer, Integer> playerToScore = new HashMap<Integer, Integer>(intToPlayer.size());
+		for (Map.Entry<Integer, Player> intAndPlayer : intToPlayer.entrySet()) {
 			playerToScore.put(intAndPlayer.getKey(), intAndPlayer.getValue().getScore());
 		}
 		return playerToScore;
 	}
 
+	public boolean isGameOver() {
+		return isGameOver;
+	}
+
+	public void setGameOver() {
+		this.isGameOver = true;
+	}
+	
+	public void undo() {
+		undoRedo.undo(this);
+	}
+	
+	public void redo() {
+		int house = undoRedo.popRedoMove();
+		acceptableMove(house);
+	}
+	
+	public void restore(int currentPlayer, Map<Integer, Player> intToPlayer){
+		this.currentPlayer = currentPlayer;
+		this.intToPlayer = intToPlayer;
+	}
+	
+	public int getStoreSeedCount(int player) {
+		return intToPlayer.get(player).getStoreSeedCount();
+	}
+	
+	public int getSeedCount(int player, int house) {
+		return intToPlayer.get(player).getSeedCount(house);
+	}
+	
+	public int getCurrentPlayer() {
+		return this.currentPlayer;
+	}
 }

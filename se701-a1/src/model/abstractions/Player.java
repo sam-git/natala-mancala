@@ -111,23 +111,10 @@ public class Player  {
             this.store = storeSeedCount;
 			this.name = name;
         }
-        
-        public void setPlayerNumber(int number) {
-        	this.number = number;
-        }
- 
-        public int[] getHouses() {
-            return houses;
-        }
-        public int getStoreSeedCount(){
-        	return store;
-        }
-        public int getNumber(){
-        	return number;
-        }
-
-		public String getName() {
-			return name;
-		}
+        public void setPlayerNumber(int number) { this.number = number; }
+        public int[] getHouses() { return houses; }
+        public int getStoreSeedCount(){ return store; }
+        public int getNumber(){ return number; }
+		public String getName() { return name; }
     }
 }

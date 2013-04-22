@@ -10,57 +10,56 @@ import model.abstractions.Player.PlayerMemento;
 public class ModelUndoRedo {
 	private final Stack<GameMemento> mementosForUndo;
 	private final Stack<Integer> intsForRedo;
-	private final GameModel model;
 	
-	public ModelUndoRedo(GameModel model) {
+	public ModelUndoRedo() {
 		this.mementosForUndo = new Stack<GameMemento>();
 		this.intsForRedo = new Stack<Integer>();
-		this.model = model;
 	}
 	
-	public void saveUndoMemento(int house) {
-		GameMemento memento = new GameMemento(model.current_player, model.intToPlayer);
+	public void saveState(int house, int currentPlayer, Map<Integer, Player> intToPlayer) {
+		GameMemento memento = new GameMemento(currentPlayer, intToPlayer);
 		memento.setNextMove(house);
 		mementosForUndo.add(memento);
 	}
 	
 	public void clearRedos() {
-		intsForRedo.clear(); //clear redos
+		intsForRedo.clear();
 	}
 	
-	public void undo() {
+	public int popRedoMove() {
+		return intsForRedo.pop();
+	}
+
+	public void undo(ModelController modelController) {
 		GameMemento newState = mementosForUndo.pop();
-		restoreFromMemento(newState);
+		restoreFromMemento(newState, modelController);
 		intsForRedo.add(newState.getNextMove());
 	}
 	
-	public int redo() {
-		return intsForRedo.pop();
-	}
-	
-	public void restoreFromMemento(GameMemento memento){
-		model.current_player = memento.getCurrentPlayer();
-
+	public void restoreFromMemento(GameMemento memento, ModelController modelController){
+		int currentPlayer = memento.currentPlayer;
+		
 		int numberOfPlayers = memento.getPlayers().length;
-		model.intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);
+		Map<Integer, Player>intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);
 
 		for (PlayerMemento p : memento.getPlayers()) {
 			String name = p.getName();
 			int playerNumber = p.getNumber();
 			int houses[] = p.getHouses();
 			int storeSeeds = p.getStoreSeedCount();
-			model.createPlayer(playerNumber, houses, storeSeeds, name);
+			
+			Player player = new Player(houses, storeSeeds, name);
+			intToPlayer.put(playerNumber, player);	
 		}
-
-		Player.joinPlayers(model.intToPlayer.values());
+		Player.joinPlayers(intToPlayer.values());
+		modelController.restore(currentPlayer, intToPlayer);
 	}
-	
 	
 	public static class GameMemento {
 		private final int currentPlayer;
-		private PlayerMemento players[];
+		private final PlayerMemento players[];
 		private int nextMove;
- 
+		
         public GameMemento(int currentPlayer, Map<Integer, Player> intToPlayer) {
             this.currentPlayer = currentPlayer;
             this.players = new PlayerMemento[intToPlayer.size()];
@@ -71,22 +70,9 @@ public class ModelUndoRedo {
             	players[entry.getKey() - 1] = playerMemento;
     		}
         }
- 
-        public PlayerMemento[] getPlayers() {
-            return players;
-        }
-
-		public int getCurrentPlayer() {
-			return currentPlayer;
-		}
-
-		public int getNextMove() {
-			return nextMove;
-		}
-
-		public void setNextMove(int nextMove) {
-			this.nextMove = nextMove;
-		}
+        public PlayerMemento[] getPlayers() { return players; }
+		public int getCurrentPlayer() { return currentPlayer; }
+		public int getNextMove() { return nextMove; }
+		public void setNextMove(int nextMove) { this.nextMove = nextMove; }
     }
-
 }

@@ -27,51 +27,16 @@ public class GameModel extends Observable {
 	
 	private final int HOUSES_PER_PLAYER;
 	private final boolean PLAY_CLOCKWISE;
-
-	final ModelUndoRedo undoRedo;
-	final ModelController controller;
-
-	Map<Integer, Player> intToPlayer;
-	int current_player;
-	boolean isGameOver;
-
+	private final Map<Integer, String> intToName;
+	private final ModelController controller;
 
 	public GameModel(String gameRules) {
-		Properties props = ModelProperties.createProperties(gameRules);		
-		this.undoRedo = new ModelUndoRedo(this);
-		this.controller = new ModelController(this);
+		Properties props = ModelInitialiser.createProperties(gameRules);
+		this.controller = new ModelController(props);
+		this.intToName = ModelInitialiser.createNameMap(props);
 
 		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
 		this.PLAY_CLOCKWISE = PropsLoader.getBool(props, "playClockwise");
-		this.current_player = PropsLoader.getInt(props, "startingPlayer");
-		this.isGameOver = false;
-		
-		createNewGame(props);
-	}
-
-
-	private void createNewGame(Properties props) {
-		int numberOfPlayers = PropsLoader.getInt(props, "numberOfPlayers");
-		this.intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);
-		
-		int[] houses = new int[PropsLoader.getInt(props, "housesPerPlayer")];
-		int startingSeedsPerHouse = PropsLoader.getInt(props, "startingSeedsPerHouse");
-		int storeSeeds = PropsLoader.getInt(props, "startingSeedsPerStore");
-		
-		for (int i = 0; i < houses.length; i++) {
-			houses[i] = startingSeedsPerHouse;
-		}
-		for (int playerNumber = 1; playerNumber <= numberOfPlayers; playerNumber++) {
-			String name = props.getProperty(playerNumber + "Name");
-			createPlayer(playerNumber, houses, storeSeeds, name);
-		}
-		Player.joinPlayers(intToPlayer.values());
-		
-	}
-
-	void createPlayer(int playerNumber, int[] houses, int storeSeeds, String name) {
-		Player player = new Player(houses, storeSeeds, name);
-		this.intToPlayer.put(playerNumber, player);	
 	}
 
 	/**
@@ -80,26 +45,19 @@ public class GameModel extends Observable {
 	 * @return
 	 */
 	public boolean isGameOver() {
-		return this.isGameOver;
+		return controller.isGameOver();
 	}
 
 	public String getCurrentPlayerName() {
-		return intToPlayer.get(current_player).getName();
+		return intToName.get(controller.getCurrentPlayer());
 	}
-
-	/**
-	 * returns the number of seeds in a players house.
-	 * 
-	 * @param player
-	 * @param house
-	 * @return
-	 */
+	
 	public int getSeedCount(int player, int house) {
-		return intToPlayer.get(player).getSeedCount(house);
+		return controller.getSeedCount(player, house);
 	}
 
 	public int getStoreSeedCount(int player) {
-		return intToPlayer.get(player).getStoreSeedCount();
+		return controller.getStoreSeedCount(player);
 	}
 
 	public int getHousesPerPlayer() {
@@ -115,7 +73,6 @@ public class GameModel extends Observable {
 		notifyObservers(EventStrategyFactory.gameStartStrategy());
 	}
 
-
 	public void move(int house) {
 		IEventStrategy strategy = controller.move(house);
 		setChanged();
@@ -126,19 +83,18 @@ public class GameModel extends Observable {
 	 * notify observers that the game was quit before ending
 	 */
 	public void quit() {
-		this.isGameOver = true;
+		controller.setGameOver();
 		setChanged();
-		notifyObservers(EventStrategyFactory.gameQuitStrategy(this.current_player));
+		notifyObservers(EventStrategyFactory.gameQuitStrategy(controller.getCurrentPlayer()));
 	}
 	
 	public void undo() {
-		undoRedo.undo();
+		controller.undo();
 		setChanged();
 		notifyObservers(EventStrategyFactory.undoMoveStrategy());
 	}
 	
 	public void redo() {
-		int house = undoRedo.redo();
-		controller.acceptableMove(house);
+		controller.redo();
 	}
 }
