@@ -34,8 +34,8 @@ public class ModelUndoRedo {
 		intsForRedo.add(newState.getNextMove());
 	}
 	
-	public void redo() {
-		model.acceptableMove(intsForRedo.pop());
+	public int redo() {
+		return intsForRedo.pop();
 	}
 	
 	public void restoreFromMemento(GameMemento memento){
