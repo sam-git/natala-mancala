@@ -4,8 +4,7 @@ import model.Model;
 import utility.IO;
 import utility.MockIO;
 import view.input.IMancalaInput;
-import view.input.IOInput;
-import view.input.InputWithLoadSave;
+import view.input.StandardInput;
 import view.input_strategy.IUserInputStrategy;
 import view.model_view.IOModelView;
 
@@ -33,14 +32,14 @@ public class Mancala {
 		
 		model.addObserver(view);
 		
-		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
-//		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
+//		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
+		IMancalaInput input = new StandardInput(model.getHousesPerPlayer());
 		
 		//game loop
 		model.startGame();
 		while (!model.isGameOver())  {
 			IUserInputStrategy userInput = input.promptPlayer(model.getCurrentPlayerName());
-			userInput.execute(model);
+			userInput.executeOn(model);
 		}
 	}
 

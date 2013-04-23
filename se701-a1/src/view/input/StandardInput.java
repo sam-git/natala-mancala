@@ -5,7 +5,7 @@ import java.util.Scanner;
 import view.input_strategy.IUserInputStrategy;
 import view.input_strategy.UserInputFactory;
 
-public class InputWithLoadSave implements IMancalaInput {
+public class StandardInput implements IMancalaInput {
 
 	private static final String quit = "q";
 	private static final String load = "l";
@@ -15,7 +15,7 @@ public class InputWithLoadSave implements IMancalaInput {
 //	private final int HOUSES_PER_PLAYER;
 	private Scanner scan;
 	
-	public InputWithLoadSave(int housesPerPlayer) {
+	public StandardInput(int housesPerPlayer) {
 //		this.HOUSES_PER_PLAYER = housesPerPlayer;
 		this.scan = new Scanner(System.in);
 	}

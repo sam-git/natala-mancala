@@ -1,7 +1,7 @@
 !Crazy Properties
 
-startingSeedsPerHouse = 8
-housesPerPlayer = 5
+startingSeedsPerHouse = 2
+housesPerPlayer = 3
 startingPlayer = 1
 playClockwise = true
 1Name = John(p1)

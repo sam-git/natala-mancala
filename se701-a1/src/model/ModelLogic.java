@@ -33,7 +33,6 @@ public class ModelLogic {
 	 * @return
 	 */
 	public IEventStrategy move(int house) {
-		assert (!this.isGameOver());
 		if (isHouseEmpty(house)) {
 			return EventStrategyFactory.houseEmptyStrategy();
 		}

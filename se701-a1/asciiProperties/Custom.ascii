@@ -1,9 +1,6 @@
-hFence = _
-vFence = #
-cnrFence = %
 
 ! houseFormat allows trailing whitespace. Leading whitespace is removed, unless preceded by a backslash.
-houseFormat=%3d[%3d] 
+houseFormat=%5d[%2d] 
 
 houseEmptyPrompt = Empty!
 
