@@ -23,15 +23,13 @@ import model.event_strategy.IEventStrategy;
  */
 public class Model extends Observable {
 	
-	private final int HOUSES_PER_PLAYER;
-	private final boolean PLAY_CLOCKWISE;
-	private final Map<Integer, String> intToName;
+	public final int HOUSES_PER_PLAYER;
+	public final boolean PLAY_CLOCKWISE;
 	private final ModelLogic gameLogic;
 
 	public Model(String gameRules) {
 		Properties props = ModelInitialiser.createProperties(gameRules);
 		this.gameLogic = new ModelLogic(props);
-		this.intToName = ModelInitialiser.createNameMap(props);
 
 		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
 		this.PLAY_CLOCKWISE = PropsLoader.getBool(props, "playClockwise");
@@ -46,8 +44,8 @@ public class Model extends Observable {
 		return gameLogic.isGameOver();
 	}
 
-	public String getCurrentPlayerName() {
-		return intToName.get(gameLogic.getCurrentPlayer());
+	public int currentPlayer() {
+		return gameLogic.getCurrentPlayer();
 	}
 	
 	public int getSeedCount(int player, int house) {
@@ -56,14 +54,6 @@ public class Model extends Observable {
 
 	public int getStoreSeedCount(int player) {
 		return gameLogic.getStoreSeedCount(player);
-	}
-
-	public int getHousesPerPlayer() {
-		return this.HOUSES_PER_PLAYER;
-	}
-
-	public boolean isPlayClockwise() {
-		return this.PLAY_CLOCKWISE;
 	}
 	
 	public void startGame() {
@@ -102,6 +92,7 @@ public class Model extends Observable {
 	}
 	
 	public void redo() {
-		gameLogic.redo();
+		setChanged();
+		notifyObservers(gameLogic.redo());
 	}
 }

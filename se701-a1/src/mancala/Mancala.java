@@ -1,12 +1,13 @@
 package mancala;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import model.Model;
 import utility.IO;
 import utility.MockIO;
 import view.input.IMancalaInput;
-import view.input.IOInput;
 import view.input.InputWithLoadSave;
-import view.input_strategy.IUserInputStrategy;
 import view.model_view.IOModelView;
 
 /**
@@ -27,20 +28,28 @@ public class Mancala {
 
 	public void play(IO io) {
 
-		Model model = new Model(gameProperties);
-		IOModelView view = new IOModelView(model, io);	
+		Model m = new Model(gameProperties);
+		IOModelView view = new IOModelView(m, io);	
 		if (boardProperties != null) view.setProperties(boardProperties);
 		
-		model.addObserver(view);
+		m.addObserver(view);
 		
-		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
-//		IMancalaInput input = new InputWithLoadSave(model.getHousesPerPlayer());
+//		IMancalaInput p1 = new IOInput(io, m.HOUSES_PER_PLAYER, "Player 1");
+//		IMancalaInput p2 = new IOInput(io, m.HOUSES_PER_PLAYER, "Player 2");
+
+		IMancalaInput p1 = new InputWithLoadSave("Player 1");
+		IMancalaInput p2 = new InputWithLoadSave("Player 2");
+//		IMancalaInput p2 = new KalahBot("Bert", m.HOUSES_PER_PLAYER);
+		
+		Map<Integer, IMancalaInput> intToUser = new HashMap<Integer, IMancalaInput>(2);
+		intToUser.put(1, p1);
+		intToUser.put(2, p2);
 		
 		//game loop
-		model.startGame();
-		while (!model.isGameOver())  {
-			IUserInputStrategy userInput = input.promptPlayer(model.getCurrentPlayerName());
-			userInput.execute(model);
+		m.startGame();
+		while (!m.isGameOver())  {
+			IMancalaInput player = intToUser.get(m.currentPlayer()); 
+			player.getAction().executeOn(m);
 		}
 	}
 
@@ -48,8 +57,8 @@ public class Mancala {
 		if (args.length > 0) {
 			for (String arg : args) {
 				if (arg.contains(gamePropertiesExtension) && gameProperties  == null) {
-					gameProperties = arg; //arg is a gameProperty, so don't need to check arg again.
-					continue;
+					gameProperties = arg; 
+					continue; //arg is a gameProperty, so don't need to check arg again.
 				}
 				if (arg.contains(asciiPropertiesExtension) && boardProperties == null) {
 					boardProperties = arg;

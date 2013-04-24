@@ -23,8 +23,8 @@ public class ASCIIBoardPrinter {
 
 	public ASCIIBoardPrinter(Model m, Properties props) {
 		this.m = m;		
-		this.HOUSES_PER_PLAYER = m.getHousesPerPlayer();
-		this.PLAY_CLOCKWISE = m.isPlayClockwise();
+		this.HOUSES_PER_PLAYER = m.HOUSES_PER_PLAYER;
+		this.PLAY_CLOCKWISE = m.PLAY_CLOCKWISE;
 		
 		this.setConstants(props);
 		this.prepareBoard();

@@ -2,7 +2,7 @@ package view.input;
 
 import java.util.Scanner;
 
-import view.input_strategy.IUserInputStrategy;
+import view.input_strategy.IInputStrategy;
 import view.input_strategy.UserInputFactory;
 
 public class InputWithLoadSave implements IMancalaInput {
@@ -12,12 +12,12 @@ public class InputWithLoadSave implements IMancalaInput {
 	private static final String save = "s";
 	private static final String undo = "u";
 	private static final String redo = "r";
-//	private final int HOUSES_PER_PLAYER;
+	private final String name;
 	private Scanner scan;
 	
-	public InputWithLoadSave(int housesPerPlayer) {
-//		this.HOUSES_PER_PLAYER = housesPerPlayer;
+	public InputWithLoadSave(String name) {
 		this.scan = new Scanner(System.in);
+		this.name = name;
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class InputWithLoadSave implements IMancalaInput {
 	 * or returns MancalaView.cancelResult if the user pressed the quit key..
 	 */
 	@Override
-	public IUserInputStrategy promptPlayer(String name) {
+	public IInputStrategy getAction() {
 		System.out.println(quit + " to quit, " + undo + " to undo, " + save + " to save, " + load + " to load.");
 		System.out.print(name + "'s turn - Specify house number: ");
 		

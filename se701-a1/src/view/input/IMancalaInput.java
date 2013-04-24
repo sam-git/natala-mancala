@@ -1,6 +1,6 @@
 package view.input;
 
-import view.input_strategy.IUserInputStrategy;
+import view.input_strategy.IInputStrategy;
 
 
 /**
@@ -13,5 +13,5 @@ public interface IMancalaInput {
 	 * Otherwise should return an int to represent the current players house choice.
 	 * @return
 	 */
-	IUserInputStrategy promptPlayer(String name);
+	IInputStrategy getAction();
 }

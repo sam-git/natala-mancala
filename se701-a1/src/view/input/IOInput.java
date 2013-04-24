@@ -1,10 +1,12 @@
 package view.input;
 
 import utility.IO;
-import view.input_strategy.IUserInputStrategy;
+import view.input_strategy.IInputStrategy;
 import view.input_strategy.UserInputFactory;
 
 public class IOInput implements IMancalaInput {
+	
+	private final String name;
 	
 	/**
 	 * int returned by promptPlayer() when the player chooses the quit option.
@@ -15,9 +17,10 @@ public class IOInput implements IMancalaInput {
 	private final IO io;
 	private final int HOUSES_PER_PLAYER;
 	
-	public IOInput(IO io, int housesPerPlayer) {
+	public IOInput(IO io, int housesPerPlayer, String name) {
 		this.io = io;
 		this.HOUSES_PER_PLAYER = housesPerPlayer;
+		this.name = name;
 	}
 
 	/**
@@ -26,7 +29,7 @@ public class IOInput implements IMancalaInput {
 	 * or returns MancalaView.cancelResult if the user pressed the quit key..
 	 */
 	@Override
-	public IUserInputStrategy promptPlayer(String name) {
+	public IInputStrategy getAction() {
 		String prompt = name
 				+ "'s turn - Specify house number or 'q' to quit: ";
 		int input = io.readInteger(prompt, 1, this.HOUSES_PER_PLAYER,

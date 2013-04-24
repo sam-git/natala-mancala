@@ -107,9 +107,9 @@ public class ModelLogic {
 		undoRedo.undo(this);
 	}
 	
-	public void redo() {
+	public IEventStrategy redo() {
 		int house = undoRedo.popRedoMove();
-		acceptableMove(house);
+		return acceptableMove(house);
 	}
 	
 	public void restore(int currentPlayer, Map<Integer, Player> intToPlayer){
