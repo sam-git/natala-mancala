@@ -14,6 +14,7 @@ public class InputWithLoadSave implements IMancalaInput {
 	private static final String redo = "r";
 	private final String name;
 	private Scanner scan;
+	private int playerNumber;
 	
 	public InputWithLoadSave(String name) {
 		this.scan = new Scanner(System.in);
@@ -27,8 +28,9 @@ public class InputWithLoadSave implements IMancalaInput {
 	 */
 	@Override
 	public IInputStrategy getAction() {
-		System.out.println(quit + " to quit, " + undo + " to undo, " + save + " to save, " + load + " to load.");
-		System.out.print(name + "'s turn - Specify house number: ");
+//		System.out.println(quit + " to quit, " + undo + " to undo, " + save + " to save, " + load + " to load.");
+		System.out.println(quit + " to quit, " + undo + " to undo, " + redo + " to redo.");
+		System.out.print("P" + playerNumber + " :" + name + "'s turn - Specify house number: ");
 		
 		while (true) {
 			String input = scan.next();
@@ -53,4 +55,10 @@ public class InputWithLoadSave implements IMancalaInput {
 		}
 	}
 
+	@Override
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
+		// TODO Auto-generated method stub
+		
+	}
 }

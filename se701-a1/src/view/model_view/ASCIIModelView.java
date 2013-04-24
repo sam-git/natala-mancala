@@ -60,7 +60,7 @@ public class ASCIIModelView extends AbstractModelView {
 	// MancalaView Overridden Functions
 	//
 	@Override
-	public void emptyHousePrompt() {
+	public void emptyHousePrompt(int player) {
 		println(props.getProperty("houseEmptyPrompt"));
 		printBoard();
 	}

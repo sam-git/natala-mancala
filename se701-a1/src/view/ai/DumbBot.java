@@ -4,13 +4,14 @@ import view.input.IMancalaInput;
 import view.input_strategy.IInputStrategy;
 import view.input_strategy.UserInputFactory;
 
-public class KalahBot implements IMancalaInput{
+public class DumbBot implements IMancalaInput{
 	private final String name;
 	private final int HOUSES_PER_PLAYER;
 	
 	private int house;
+	private int playerNumber;
 
-	public KalahBot(String name, int housesPerPlayer) {
+	public DumbBot(String name, int housesPerPlayer) {
 		this.name = name;
 		this.HOUSES_PER_PLAYER = housesPerPlayer;
 	}
@@ -44,6 +45,11 @@ public class KalahBot implements IMancalaInput{
 			}
 			System.out.print(".");
 		}
+	}
+
+	@Override
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
 	}
 
 }

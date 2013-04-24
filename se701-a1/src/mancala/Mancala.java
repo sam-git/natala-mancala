@@ -6,6 +6,7 @@ import java.util.Map;
 import model.Model;
 import utility.IO;
 import utility.MockIO;
+import view.ai.DumbBot;
 import view.input.IMancalaInput;
 import view.input.InputWithLoadSave;
 import view.model_view.IOModelView;
@@ -20,6 +21,7 @@ public class Mancala {
 	private static final String asciiPropertiesExtension = ".ascii";
 	private static String gameProperties;
 	private static String boardProperties;
+	Map<Integer, IMancalaInput> intToUser = new HashMap<Integer, IMancalaInput>(2);
 	
 	public static void main(String[] args) {
 		checkArgsForPropFiles(args);
@@ -34,16 +36,20 @@ public class Mancala {
 		
 		m.addObserver(view);
 		
-//		IMancalaInput p1 = new IOInput(io, m.HOUSES_PER_PLAYER, "Player 1");
-//		IMancalaInput p2 = new IOInput(io, m.HOUSES_PER_PLAYER, "Player 2");
+//		IMancalaInput p1 = new IOInput(io, m.HOUSES_PER_PLAYER);
+//		IMancalaInput p2 = new IOInput(io, m.HOUSES_PER_PLAYER);
 
-		IMancalaInput p1 = new InputWithLoadSave("Player 1");
-		IMancalaInput p2 = new InputWithLoadSave("Player 2");
-//		IMancalaInput p2 = new KalahBot("Bert", m.HOUSES_PER_PLAYER);
+		IMancalaInput p1 = new InputWithLoadSave("Sam");
+//		IMancalaInput p2 = new InputWithLoadSave("Ewan");
 		
-		Map<Integer, IMancalaInput> intToUser = new HashMap<Integer, IMancalaInput>(2);
-		intToUser.put(1, p1);
-		intToUser.put(2, p2);
+//		IMancalaInput p1 = new DumbBot("Alice", m.HOUSES_PER_PLAYER);
+		IMancalaInput p2 = new DumbBot("Bob", m.HOUSES_PER_PLAYER);
+		
+//		ImitatorBot p2 = new ImitatorBot("Clark");
+//		m.addObserver(p2);
+		
+		setPlayer(2, p1);
+		setPlayer(1, p2);
 		
 		//game loop
 		m.startGame();
@@ -51,6 +57,12 @@ public class Mancala {
 			IMancalaInput player = intToUser.get(m.currentPlayer()); 
 			player.getAction().executeOn(m);
 		}
+	}
+
+	private void setPlayer(int i, IMancalaInput player) {
+		intToUser.put(i, player);
+		player.setPlayerNumber(i);
+		
 	}
 
 	private static void checkArgsForPropFiles(String[] args) {

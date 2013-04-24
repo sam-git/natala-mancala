@@ -14,4 +14,5 @@ public interface IMancalaInput {
 	 * @return
 	 */
 	IInputStrategy getAction();
+	void setPlayerNumber(int playerNumber);
 }

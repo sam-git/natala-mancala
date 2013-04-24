@@ -5,22 +5,22 @@ import view.input_strategy.IInputStrategy;
 import view.input_strategy.UserInputFactory;
 
 public class IOInput implements IMancalaInput {
-	
-	private final String name;
-	
+
 	/**
 	 * int returned by promptPlayer() when the player chooses the quit option.
-	 * Should be used by the controller to determine if the player quit instead of made a move.
+	 * Should be used by the controller to determine if the player quit instead
+	 * of made a move.
 	 */
-	public static final int cancelResult = -1;
+	private static final int cancelResult = -1;
 
 	private final IO io;
 	private final int HOUSES_PER_PLAYER;
-	
-	public IOInput(IO io, int housesPerPlayer, String name) {
+
+	private int playerNumber;
+
+	public IOInput(IO io, int housesPerPlayer) {
 		this.io = io;
 		this.HOUSES_PER_PLAYER = housesPerPlayer;
-		this.name = name;
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class IOInput implements IMancalaInput {
 	 */
 	@Override
 	public IInputStrategy getAction() {
-		String prompt = name
+		String prompt = "Player " + this.playerNumber
 				+ "'s turn - Specify house number or 'q' to quit: ";
 		int input = io.readInteger(prompt, 1, this.HOUSES_PER_PLAYER,
 				cancelResult, "q");
@@ -40,4 +40,10 @@ public class IOInput implements IMancalaInput {
 			return UserInputFactory.move(input);
 		}
 	}
+
+	@Override
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
+	}
+
 }

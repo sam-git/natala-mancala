@@ -43,12 +43,11 @@ public class ModelUndoRedo {
 		Map<Integer, Player>intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);
 
 		for (PlayerMemento p : memento.getPlayers()) {
-			String name = p.getName();
 			int playerNumber = p.getNumber();
 			int houses[] = p.getHouses();
 			int storeSeeds = p.getStoreSeedCount();
 			
-			Player player = new Player(houses, storeSeeds, name);
+			Player player = new Player(houses, storeSeeds);
 			intToPlayer.put(playerNumber, player);	
 		}
 		Player.joinPlayers(intToPlayer.values());

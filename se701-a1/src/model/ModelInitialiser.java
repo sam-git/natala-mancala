@@ -28,8 +28,6 @@ public class ModelInitialiser {
 		props.setProperty("startingPlayer", "1");
 		props.setProperty("numberOfPlayers", "2");
 		props.setProperty("playClockwise", "false");
-		props.setProperty("1Name", "Player 1");
-		props.setProperty("2Name", "Player 2");
 		return props;
 	}
 	
@@ -45,8 +43,7 @@ public class ModelInitialiser {
 		Map<Integer, Player> intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);	
 		
 		for (int playerNumber = 1; playerNumber <= numberOfPlayers; playerNumber++) {
-			String name = props.getProperty(playerNumber + "Name");
-			Player player = new Player(houses, storeSeeds, name);
+			Player player = new Player(houses, storeSeeds);
 			intToPlayer.put(playerNumber, player);	
 		}
 		Player.joinPlayers(intToPlayer.values());
