@@ -58,8 +58,6 @@ public class StandardInput implements IMancalaInput {
 
 	@Override
 	public void setPlayerNumber(int playerNumber) {
-		this.playerNumber = playerNumber;
-		// TODO Auto-generated method stub
-		
+		this.playerNumber = playerNumber;		
 	}
 }

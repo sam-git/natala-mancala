@@ -18,7 +18,7 @@ public class DumbBot implements IMancalaInput{
 
 	@Override
 	public IInputStrategy getAction() {
-		System.out.println(name + " is thinking.");
+		System.out.println(playerNumber + " : " + name + " is thinking.");
 		pretendToThink();
 		house = (house++ % HOUSES_PER_PLAYER) + 1;
 		System.out.println(name + " says " + house);

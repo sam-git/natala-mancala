@@ -7,8 +7,8 @@ import model.Model;
 import utility.IO;
 import utility.MockIO;
 import view.ai.DumbBot;
+import view.ai.ImitatorBot;
 import view.input.IMancalaInput;
-import view.input.StandardInput;
 import view.model_view.IOModelView;
 
 /**
@@ -39,17 +39,17 @@ public class Mancala {
 //		IMancalaInput p1 = new IOInput(io, m.HOUSES_PER_PLAYER);
 //		IMancalaInput p2 = new IOInput(io, m.HOUSES_PER_PLAYER);
 
-		IMancalaInput p1 = new StandardInput("Sam");
+//		IMancalaInput p1 = new StandardInput("Sam");
 //		IMancalaInput p2 = new StandardInput("Ewan");
 		
-//		IMancalaInput p1 = new DumbBot("Alice", m.HOUSES_PER_PLAYER);
-		IMancalaInput p2 = new DumbBot("Bob", m.HOUSES_PER_PLAYER);
+		IMancalaInput p1 = new DumbBot("Alice", m.HOUSES_PER_PLAYER);
+//		IMancalaInput p2 = new DumbBot("Bob", m.HOUSES_PER_PLAYER);
 		
-//		ImitatorBot p2 = new ImitatorBot("Clark");
-//		m.addObserver(p2);
+		ImitatorBot p2 = new ImitatorBot("Clark");
+		m.addObserver(p2);
 		
-		setPlayer(2, p1);
-		setPlayer(1, p2);
+		setPlayer(1, p1);
+		setPlayer(2, p2);
 		
 		//game loop
 		m.startGame();

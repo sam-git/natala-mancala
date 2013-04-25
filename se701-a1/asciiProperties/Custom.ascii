@@ -1,11 +1,24 @@
+("1ShortName", "P1");
+("2ShortName", "P2");
+("hFence", "-");
+("vFence", "|");
+("cnrFence", "+");
+("houseFormat", "%2d[%2d] ");
+		
+("houseEmptyPrompt", "House is empty. Move again.");
+("invalidHouseFormat", "%d is not a valid house.");
+("gameOver", "Game over");
+("scoreFormat", "	player %d:%s");
+("winnerFormat", "Player %d wins!");
+("tie", "A tie!");
+("undo", "Previous move undone.");
 
-! houseFormat allows trailing whitespace. Leading whitespace is removed, unless preceded by a backslash.
-houseFormat=%5d[%2d] 
+hFence = ~
+vFence = I
+cnrFence = o
 
-houseEmptyPrompt = Empty!
+#! houseFormat allows trailing whitespace. Leading whitespace is removed, unless preceded by a backslash.
+houseFormat = \ %2d [%5d ] 
 
-gameOver = Game over. Thank you for playing!
-
-
-1ShortName = Pl1
-2ShortName = Play2
+1ShortName = P 1
+2ShortName = P 2
