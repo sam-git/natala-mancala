@@ -7,12 +7,10 @@ import java.util.Map;
 
 public class Player  {
 	
-	private String name;
 	private Store store;
 	private Map<Integer, House> intToHouse;
 	
-	public Player(int[] houses, int storeSeedCount, String name) {
-		this.name = name;
+	public Player(int[] houses, int storeSeedCount) {
 		this.store = new Store(this, storeSeedCount);
 		
 		this.intToHouse = new HashMap<Integer, House>();
@@ -45,10 +43,6 @@ public class Player  {
 	
 	public int getStoreSeedCount() {
 		return store.getSeedCount();
-	}
-	
-	public String getName() {
-		return name;
 	}
 
 	public int getScore() {
@@ -97,24 +91,21 @@ public class Player  {
 		for (int i = 0; i < intToHouse.size(); i++) {
 			houses[i] = intToHouse.get(i+1).getSeedCount();
 		}
-		return new PlayerMemento(houses, this.store.getSeedCount(), this.name);
+		return new PlayerMemento(houses, this.store.getSeedCount());
 	}
 	
 	public static class PlayerMemento {
         private final int houses[];
         private final int store;
-        private final String name;
         private int number;
  
-        public PlayerMemento(int houses[], int storeSeedCount, String name) {
+        public PlayerMemento(int houses[], int storeSeedCount) {
             this.houses = houses;
             this.store = storeSeedCount;
-			this.name = name;
         }
         public void setPlayerNumber(int number) { this.number = number; }
         public int[] getHouses() { return houses; }
         public int getStoreSeedCount(){ return store; }
         public int getNumber(){ return number; }
-		public String getName() { return name; }
     }
 }

@@ -2,7 +2,7 @@ package view.input;
 
 import java.util.Scanner;
 
-import view.input_strategy.IUserInputStrategy;
+import view.input_strategy.IInputStrategy;
 import view.input_strategy.UserInputFactory;
 
 public class StandardInput implements IMancalaInput {
@@ -12,12 +12,14 @@ public class StandardInput implements IMancalaInput {
 	private static final String save = "s";
 	private static final String undo = "u";
 	private static final String redo = "r";
-//	private final int HOUSES_PER_PLAYER;
+	private final String name;
 	private Scanner scan;
+	private int playerNumber;
 	
-	public StandardInput(int housesPerPlayer) {
-//		this.HOUSES_PER_PLAYER = housesPerPlayer;
+
+	public StandardInput(String name) {
 		this.scan = new Scanner(System.in);
+		this.name = name;
 	}
 
 	/**
@@ -26,9 +28,10 @@ public class StandardInput implements IMancalaInput {
 	 * or returns MancalaView.cancelResult if the user pressed the quit key..
 	 */
 	@Override
-	public IUserInputStrategy promptPlayer(String name) {
-		System.out.println(quit + " to quit, " + undo + " to undo, " + save + " to save, " + load + " to load.");
-		System.out.print(name + "'s turn - Specify house number: ");
+	public IInputStrategy getAction() {
+//		System.out.println(quit + " to quit, " + undo + " to undo, " + save + " to save, " + load + " to load.");
+		System.out.println(quit + " to quit, " + undo + " to undo, " + redo + " to redo.");
+		System.out.print("P" + playerNumber + " :" + name + "'s turn - Specify house number: ");
 		
 		while (true) {
 			String input = scan.next();
@@ -53,4 +56,10 @@ public class StandardInput implements IMancalaInput {
 		}
 	}
 
+	@Override
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
+		// TODO Auto-generated method stub
+		
+	}
 }

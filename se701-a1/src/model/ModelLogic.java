@@ -34,7 +34,7 @@ public class ModelLogic {
 	 */
 	public IEventStrategy move(int house) {
 		if (isHouseEmpty(house)) {
-			return EventStrategyFactory.houseEmptyStrategy();
+			return EventStrategyFactory.houseEmptyStrategy(currentPlayer);
 		}
 		undoRedo.clearRedos();
 		return acceptableMove(house);
@@ -44,6 +44,8 @@ public class ModelLogic {
 	private IEventStrategy acceptableMove(int house) {
 		undoRedo.saveStateForUndo(house, currentPlayer, intToPlayer);
 		CompositeEventStrategy events = new CompositeEventStrategy();
+		
+		events.add(EventStrategyFactory.moveStartedStrategy(currentPlayer, house));
 		
 		boolean moveEndedOnOwnStore = intToPlayer.get(currentPlayer).move(house);
 	
@@ -106,9 +108,9 @@ public class ModelLogic {
 		undoRedo.undo(this);
 	}
 	
-	public void redo() {
+	public IEventStrategy redo() {
 		int house = undoRedo.popRedoMove();
-		acceptableMove(house);
+		return acceptableMove(house);
 	}
 	
 	public void restore(int currentPlayer, Map<Integer, Player> intToPlayer){

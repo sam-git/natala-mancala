@@ -14,10 +14,18 @@ public class EventStrategyFactory {
 		};
 	}
 	
-	public static IEventStrategy houseEmptyStrategy() {
+	public static IEventStrategy moveStartedStrategy(final int player, final int house) {
 		return new IEventStrategy() {
 			public void execute(AbstractModelView view) {
-				view.emptyHousePrompt();
+				view.moveStarted(player, house);
+			}
+		};
+	}
+	
+	public static IEventStrategy houseEmptyStrategy(final int player) {
+		return new IEventStrategy() {
+			public void execute(AbstractModelView view) {
+				view.emptyHousePrompt(player);
 			}
 		};
 	}

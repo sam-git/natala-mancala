@@ -38,9 +38,10 @@ public abstract class AbstractModelView implements Observer {
 	public void gameStarted() {}
 	public void moveEnded() {}
 	public void gameQuit(int quittingPlayer) {}
-	public void emptyHousePrompt() {}
+	public void emptyHousePrompt(int player) {}
 	public void invalidHousePrompt(int house) {}
 	public void gameEnded(Map<Integer, Integer> playerToScore) {}
 	public void moveUndone() {};
+	public void moveStarted(int player, int house) {};
 	
 }

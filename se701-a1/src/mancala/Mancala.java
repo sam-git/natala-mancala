@@ -1,11 +1,14 @@
 package mancala;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import model.Model;
 import utility.IO;
 import utility.MockIO;
+import view.ai.DumbBot;
 import view.input.IMancalaInput;
 import view.input.StandardInput;
-import view.input_strategy.IUserInputStrategy;
 import view.model_view.IOModelView;
 
 /**
@@ -18,6 +21,7 @@ public class Mancala {
 	private static final String asciiPropertiesExtension = ".ascii";
 	private static String gameProperties;
 	private static String boardProperties;
+	Map<Integer, IMancalaInput> intToUser = new HashMap<Integer, IMancalaInput>(2);
 	
 	public static void main(String[] args) {
 		checkArgsForPropFiles(args);
@@ -26,29 +30,47 @@ public class Mancala {
 
 	public void play(IO io) {
 
-		Model model = new Model(gameProperties);
-		IOModelView view = new IOModelView(model, io);	
+		Model m = new Model(gameProperties);
+		IOModelView view = new IOModelView(m, io);	
 		if (boardProperties != null) view.setProperties(boardProperties);
 		
-		model.addObserver(view);
+		m.addObserver(view);
 		
-//		IMancalaInput input = new IOInput(io, model.getHousesPerPlayer());
-		IMancalaInput input = new StandardInput(model.getHousesPerPlayer());
+//		IMancalaInput p1 = new IOInput(io, m.HOUSES_PER_PLAYER);
+//		IMancalaInput p2 = new IOInput(io, m.HOUSES_PER_PLAYER);
+
+		IMancalaInput p1 = new StandardInput("Sam");
+//		IMancalaInput p2 = new StandardInput("Ewan");
+		
+//		IMancalaInput p1 = new DumbBot("Alice", m.HOUSES_PER_PLAYER);
+		IMancalaInput p2 = new DumbBot("Bob", m.HOUSES_PER_PLAYER);
+		
+//		ImitatorBot p2 = new ImitatorBot("Clark");
+//		m.addObserver(p2);
+		
+		setPlayer(2, p1);
+		setPlayer(1, p2);
 		
 		//game loop
-		model.startGame();
-		while (!model.isGameOver())  {
-			IUserInputStrategy userInput = input.promptPlayer(model.getCurrentPlayerName());
-			userInput.executeOn(model);
+		m.startGame();
+		while (!m.isGameOver())  {
+			IMancalaInput player = intToUser.get(m.currentPlayer()); 
+			player.getAction().executeOn(m);
 		}
+	}
+
+	private void setPlayer(int i, IMancalaInput player) {
+		intToUser.put(i, player);
+		player.setPlayerNumber(i);
+		
 	}
 
 	private static void checkArgsForPropFiles(String[] args) {
 		if (args.length > 0) {
 			for (String arg : args) {
 				if (arg.contains(gamePropertiesExtension) && gameProperties  == null) {
-					gameProperties = arg; //arg is a gameProperty, so don't need to check arg again.
-					continue;
+					gameProperties = arg; 
+					continue; //arg is a gameProperty, so don't need to check arg again.
 				}
 				if (arg.contains(asciiPropertiesExtension) && boardProperties == null) {
 					boardProperties = arg;
