@@ -42,6 +42,9 @@ public class ASCIIModelView extends AbstractModelView {
 		props.setProperty("winnerFormat", "Player %d wins!");
 		props.setProperty("tie", "A tie!");
 		props.setProperty("undo", "Previous move undone.");
+		props.setProperty("undoFail", "No moves to undo.");
+		props.setProperty("redo", "Redo successful.");
+		props.setProperty("redoFail", "No moves to redo.");
 		return props;
 	}
 
@@ -92,9 +95,22 @@ public class ASCIIModelView extends AbstractModelView {
 	}
 	
 	@Override
-	public void moveUndone() {
-		println(props.getProperty("undo"));
-		printBoard();
+	public void moveUndone(boolean success) {
+		if (success) {
+			println(props.getProperty("undo"));
+			printBoard();
+		} else {
+			println(props.getProperty("undoFail"));
+		}
+	}
+	
+	@Override
+	public void moveRedone(boolean success) {
+		if (success) {
+			println(props.getProperty("redo"));
+		} else {
+			println(props.getProperty("redoFail"));
+		}
 	}
 
 	// *****************************************************

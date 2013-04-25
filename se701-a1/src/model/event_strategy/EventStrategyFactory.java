@@ -62,10 +62,18 @@ public class EventStrategyFactory {
 		};
 	}
 	
-	public static IEventStrategy undoMoveStrategy() {
+	public static IEventStrategy undoMoveStrategy(final boolean success) {
 		return new IEventStrategy() {
 			public void execute(AbstractModelView view) {
-				view.moveUndone();
+				view.moveUndone(success);
+			}
+		};
+	}
+
+	public static IEventStrategy moveRedoneStrategy(final boolean success) {
+		return new IEventStrategy() {
+			public void execute(AbstractModelView view) {
+				view.moveRedone(success);
 			}
 		};
 	}

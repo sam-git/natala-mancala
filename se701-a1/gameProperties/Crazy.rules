@@ -1,6 +1,6 @@
 !Crazy Properties
 
-startingSeedsPerHouse = 200
-housesPerPlayer = 50
+startingSeedsPerHouse = 500
+housesPerPlayer = 500
 startingPlayer = 1
-playClockwise = false
+playClockwise = true

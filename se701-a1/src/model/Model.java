@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Properties;
 
 import mancala.PropsLoader;
+import model.ModelHistory.GameMemento;
 import model.event_strategy.EventStrategyFactory;
 import model.event_strategy.IEventStrategy;
 
@@ -22,14 +23,24 @@ import model.event_strategy.IEventStrategy;
  */
 public class Model extends Observable {
 	
-	public final int HOUSES_PER_PLAYER;
-	public final boolean PLAY_CLOCKWISE;
-	private final ModelLogic gameLogic;
+	public int HOUSES_PER_PLAYER;
+	public boolean PLAY_CLOCKWISE;
+	private ModelLogic gameLogic;
+	private Properties props;
 
 	public Model(String gameRules) {
 		Properties props = ModelInitialiser.createProperties(gameRules);
-		this.gameLogic = new ModelLogic(props);
+		this.props = props;
+		createGameFromProperties(props);
+	}
+	
+	private Model(Properties props, GameMemento memento) {
+		createGameFromProperties(props);
+		gameLogic.restoreFromMemento(memento);
+	}
 
+	private void createGameFromProperties(Properties props) {
+		this.gameLogic = new ModelLogic(props);
 		this.HOUSES_PER_PLAYER = PropsLoader.getInt(props, "housesPerPlayer");
 		this.PLAY_CLOCKWISE = PropsLoader.getBool(props, "playClockwise");
 	}
@@ -85,13 +96,19 @@ public class Model extends Observable {
 	}
 	
 	public void undo() {
-		gameLogic.undo();
+		boolean success = gameLogic.undo();
 		setChanged();
-		notifyObservers(EventStrategyFactory.undoMoveStrategy());
+		notifyObservers(EventStrategyFactory.undoMoveStrategy(success));
 	}
 	
 	public void redo() {
+		IEventStrategy event = gameLogic.redo();
 		setChanged();
-		notifyObservers(gameLogic.redo());
+		notifyObservers(event);
+	}
+	
+	public Model getCopy() {
+		Model copy = new Model(this.props, gameLogic.getMemento());
+		return copy;
 	}
 }

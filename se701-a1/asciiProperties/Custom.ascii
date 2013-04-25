@@ -18,7 +18,7 @@ vFence = I
 cnrFence = o
 
 #! houseFormat allows trailing whitespace. Leading whitespace is removed, unless preceded by a backslash.
-houseFormat = \ %2d [%5d ] 
+houseFormat = \ %3d [%3d ] 
 
-1ShortName = P 1
-2ShortName = P 2
+1ShortName = \ P1 
+2ShortName = \ P2

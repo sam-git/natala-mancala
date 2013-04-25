@@ -6,9 +6,13 @@ import java.util.Map;
 import model.Model;
 import utility.IO;
 import utility.MockIO;
+import view.ai.AbstractBot;
 import view.ai.DumbBot;
 import view.ai.ImitatorBot;
+import view.ai.SmartBot;
 import view.input.IMancalaInput;
+import view.input.IOInput;
+import view.input.StandardInput;
 import view.model_view.IOModelView;
 
 /**
@@ -32,24 +36,10 @@ public class Mancala {
 
 		Model m = new Model(gameProperties);
 		IOModelView view = new IOModelView(m, io);	
-		if (boardProperties != null) view.setProperties(boardProperties);
-		
+		if (boardProperties != null) view.setProperties(boardProperties);		
 		m.addObserver(view);
 		
-//		IMancalaInput p1 = new IOInput(io, m.HOUSES_PER_PLAYER);
-//		IMancalaInput p2 = new IOInput(io, m.HOUSES_PER_PLAYER);
-
-//		IMancalaInput p1 = new StandardInput("Sam");
-//		IMancalaInput p2 = new StandardInput("Ewan");
-		
-		IMancalaInput p1 = new DumbBot("Alice", m.HOUSES_PER_PLAYER);
-//		IMancalaInput p2 = new DumbBot("Bob", m.HOUSES_PER_PLAYER);
-		
-		ImitatorBot p2 = new ImitatorBot("Clark");
-		m.addObserver(p2);
-		
-		setPlayer(1, p1);
-		setPlayer(2, p2);
+		setPlayers(io, m);
 		
 		//game loop
 		m.startGame();
@@ -57,6 +47,33 @@ public class Mancala {
 			IMancalaInput player = intToUser.get(m.currentPlayer()); 
 			player.getAction().executeOn(m);
 		}
+	}
+
+	private void setPlayers(IO io, Model m) {
+		IMancalaInput p1; 
+		IMancalaInput p2; 
+		
+//		p1 = new IOInput(io, m.HOUSES_PER_PLAYER);
+//		p2 = new IOInput(io, m.HOUSES_PER_PLAYER);
+
+//		p1 = new StandardInput("Sam");
+//		p2 = new StandardInput("Ewan");
+		
+//		p1 = new DumbBot("Sam", m.HOUSES_PER_PLAYER);
+//		p2 = new DumbBot("Bob", m.HOUSES_PER_PLAYER);
+		
+//		p1 = new ImitatorBot("Mike");
+//		m.addObserver((ImitatorBot)p1);
+//		p2 = new ImitatorBot("Mike");
+//		m.addObserver((AbstractBot)p2);
+		
+		p1 = new SmartBot("Super Bot 1", m);
+		m.addObserver((AbstractBot)p1);
+		p2 = new SmartBot("Super Bot 2", m);
+		m.addObserver((AbstractBot)p2);
+		
+		setPlayer(1, p1);
+		setPlayer(2, p2);
 	}
 
 	private void setPlayer(int i, IMancalaInput player) {

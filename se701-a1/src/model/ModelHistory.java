@@ -1,17 +1,16 @@
 package model;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
 import model.abstractions.Player;
 import model.abstractions.Player.PlayerMemento;
 
-public class ModelUndoRedo {
+public class ModelHistory {
 	private final Stack<GameMemento> mementosForUndo;
 	private final Stack<Integer> intsForRedo;
 	
-	public ModelUndoRedo() {
+	public ModelHistory() {
 		this.mementosForUndo = new Stack<GameMemento>();
 		this.intsForRedo = new Stack<Integer>();
 	}
@@ -27,31 +26,22 @@ public class ModelUndoRedo {
 	}
 	
 	public int popRedoMove() {
-		return intsForRedo.pop();
-	}
-
-	public void undo(ModelLogic modelController) {
-		GameMemento newState = mementosForUndo.pop();
-		restoreFromMemento(newState, modelController);
-		intsForRedo.add(newState.getNextMove());
-	}
-	
-	public void restoreFromMemento(GameMemento memento, ModelLogic model){
-		int currentPlayer = memento.currentPlayer;
-		
-		int numberOfPlayers = memento.getPlayers().length;
-		Map<Integer, Player>intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);
-
-		for (PlayerMemento p : memento.getPlayers()) {
-			int playerNumber = p.getNumber();
-			int houses[] = p.getHouses();
-			int storeSeeds = p.getStoreSeedCount();
-			
-			Player player = new Player(houses, storeSeeds);
-			intToPlayer.put(playerNumber, player);	
+		if (intsForRedo.isEmpty()) {
+			return -1;
+		} else {
+			return intsForRedo.pop();
 		}
-		Player.joinPlayers(intToPlayer.values());
-		model.restore(currentPlayer, intToPlayer);
+	}
+
+	public boolean undo(ModelLogic gameLogic) {
+		if (mementosForUndo.isEmpty()) {
+			return false;
+		} else {
+			GameMemento newState = mementosForUndo.pop();
+			gameLogic.restoreFromMemento(newState);
+			intsForRedo.add(newState.getNextMove());
+			return true;
+		}
 	}
 	
 	public static class GameMemento {

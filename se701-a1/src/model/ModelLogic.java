@@ -5,20 +5,22 @@ import java.util.Map;
 import java.util.Properties;
 
 import mancala.PropsLoader;
+import model.ModelHistory.GameMemento;
 import model.abstractions.Player;
+import model.abstractions.Player.PlayerMemento;
 import model.event_strategy.CompositeEventStrategy;
 import model.event_strategy.EventStrategyFactory;
 import model.event_strategy.IEventStrategy;
 
 public class ModelLogic {
-	private final ModelUndoRedo undoRedo;
+	private final ModelHistory modelHistory;
 
 	private Map<Integer, Player> intToPlayer;
 	private int currentPlayer;
 	private boolean isGameOver;
 	
 	public ModelLogic(Properties props) {
-		this.undoRedo = new ModelUndoRedo();
+		this.modelHistory = new ModelHistory();
 
 		this.isGameOver = false;
 		this.currentPlayer = PropsLoader.getInt(props, "startingPlayer");
@@ -36,15 +38,14 @@ public class ModelLogic {
 		if (isHouseEmpty(house)) {
 			return EventStrategyFactory.houseEmptyStrategy(currentPlayer);
 		}
-		undoRedo.clearRedos();
+		modelHistory.clearRedos();
 		return acceptableMove(house);
 	}
 
 	
 	private IEventStrategy acceptableMove(int house) {
-		undoRedo.saveStateForUndo(house, currentPlayer, intToPlayer);
-		CompositeEventStrategy events = new CompositeEventStrategy();
-		
+		modelHistory.saveStateForUndo(house, currentPlayer, intToPlayer);
+		CompositeEventStrategy events = new CompositeEventStrategy();	
 		events.add(EventStrategyFactory.moveStartedStrategy(currentPlayer, house));
 		
 		boolean moveEndedOnOwnStore = intToPlayer.get(currentPlayer).move(house);
@@ -96,6 +97,22 @@ public class ModelLogic {
 		return playerToScore;
 	}
 
+	public IEventStrategy redo() {
+		int house = modelHistory.popRedoMove();
+		if (house == -1) {
+			return EventStrategyFactory.moveRedoneStrategy(false);
+		} else {
+			CompositeEventStrategy events = new CompositeEventStrategy();
+			events.add(EventStrategyFactory.moveRedoneStrategy(true));
+			events.add(acceptableMove(house));
+			return events;
+		}
+	}
+
+	public boolean undo() {
+		return modelHistory.undo(this);
+	}
+
 	public boolean isGameOver() {
 		return isGameOver;
 	}
@@ -104,16 +121,25 @@ public class ModelLogic {
 		this.isGameOver = true;
 	}
 	
-	public void undo() {
-		undoRedo.undo(this);
+	void restoreFromMemento(GameMemento memento){
+		int currentPlayer = memento.getCurrentPlayer();
+		
+		int numberOfPlayers = memento.getPlayers().length;
+		Map<Integer, Player>intToPlayer = new HashMap<Integer, Player>(numberOfPlayers);
+
+		for (PlayerMemento p : memento.getPlayers()) {
+			int playerNumber = p.getNumber();
+			int houses[] = p.getHouses();
+			int storeSeeds = p.getStoreSeedCount();
+			
+			Player player = new Player(houses, storeSeeds);
+			intToPlayer.put(playerNumber, player);	
+		}
+		Player.joinPlayers(intToPlayer.values());
+		restore(currentPlayer, intToPlayer);
 	}
 	
-	public IEventStrategy redo() {
-		int house = undoRedo.popRedoMove();
-		return acceptableMove(house);
-	}
-	
-	public void restore(int currentPlayer, Map<Integer, Player> intToPlayer){
+	private void restore(int currentPlayer, Map<Integer, Player> intToPlayer){
 		this.currentPlayer = currentPlayer;
 		this.intToPlayer = intToPlayer;
 	}
@@ -128,5 +154,9 @@ public class ModelLogic {
 	
 	public int getCurrentPlayer() {
 		return this.currentPlayer;
+	}
+
+	public GameMemento getMemento() {
+		return new GameMemento(currentPlayer, intToPlayer);
 	}
 }
