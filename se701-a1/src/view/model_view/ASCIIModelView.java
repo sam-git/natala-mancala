@@ -23,7 +23,7 @@ public class ASCIIModelView extends AbstractModelView {
 	public void setProperties(String propsFileName) {
 		String newPropertiesFile = asciiPropsFolder + propsFileName;
 		PropsLoader.insertCustomProps(this.props, newPropertiesFile);
-		this.board.setConstants(props);
+		this.getBoardPrinter().setConstants(props);
 	}
 
 	private Properties createDefaultProperties() {
@@ -56,7 +56,7 @@ public class ASCIIModelView extends AbstractModelView {
 	 * Print an ASCII representation of the current board.
 	 */
 	public void printBoard() {
-		printStringArray(board.toStringArray());
+		printStringArray(getBoardPrinter().toStringArray());
 	}
 
 	// *****************************************************
@@ -155,5 +155,9 @@ public class ASCIIModelView extends AbstractModelView {
 		for (int i = 0; i < str.length; i++) {
 			println(str[i]);
 		}
+	}
+
+	public ASCIIBoardPrinter getBoardPrinter() {
+		return board;
 	}
 }
